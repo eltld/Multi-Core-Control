@@ -1,0 +1,2 @@
+ echo "1800000000 1550000000 2000000000" > /sys/class/misc/colorcontrol/multiplier 
+ echo "0 0 0" > /sys/class/misc/colorcontrol/v1_offset 
