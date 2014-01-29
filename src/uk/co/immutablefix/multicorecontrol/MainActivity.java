@@ -8,14 +8,24 @@ import android.content.SharedPreferences;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
+import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.TableLayout;
+import android.widget.TextView;
 
 import uk.co.immutablefix.multicorecontrol.R;
 
 
 public class MainActivity extends Activity {
+	TextView [] tvVoltage;
+	SeekBar [] sbVoltage;
+
 	EditText editDefault, editCustom;
 	CheckBox cbxBoot;
 	SharedPreferences prefs;
@@ -79,6 +89,15 @@ public class MainActivity extends Activity {
 				editCustom.setText(VoltageControl.defaultCustomVoltages); 
 			}
 		});		
+	    
+	    String [] frequencies;
+	    frequencies = new String[12];
+	    
+	    for (int i=0; i < frequencies.length; i++){
+	    	frequencies[i] = i*100 + "MHz";
+	    }
+	    
+	    addVoltageUI(frequencies);
 	}
 
     //Creates menus
@@ -103,6 +122,81 @@ public class MainActivity extends Activity {
     	}
     	
     	return false;
-    }    
+    }  
+    
+    public void addVoltageUI(String freqs[]){
+    	LinearLayout [] llSettings;    	
+
+    	llSettings = new LinearLayout[freqs.length]; 
+    	tvVoltage = new TextView[freqs.length];
+    	sbVoltage = new SeekBar[freqs.length];
+    	
+    	ScrollView sv = new ScrollView(this);
+    	LinearLayout ll = new LinearLayout(this);
+    	ll.setOrientation(LinearLayout.VERTICAL);
+    	sv.addView(ll);
+
+    	for (int i=0; i < llSettings.length; i++){
+
+    		llSettings[i] = new LinearLayout(this);
+    		llSettings[i].setPadding(20, 20, 20, 20);
+    		llSettings[i].setOrientation(LinearLayout.HORIZONTAL);
+    		llSettings[i].setLayoutParams(new TableLayout.LayoutParams(
+					LayoutParams.MATCH_PARENT, 
+					LayoutParams.WRAP_CONTENT, 
+					1f));
+    		
+    		// Add frequency textview
+    		TextView tv = new TextView(this);
+			tv.setText(freqs[i]);
+			tv.setLayoutParams(new TableLayout.LayoutParams(
+					LayoutParams.WRAP_CONTENT, 
+					LayoutParams.WRAP_CONTENT, 
+					2f));
+			llSettings[i].addView(tv);
+			
+    		// Add voltage textview
+    		sbVoltage[i] = new SeekBar(this);
+    		sbVoltage[i].setLayoutParams(new TableLayout.LayoutParams(
+					LayoutParams.MATCH_PARENT, 
+					LayoutParams.WRAP_CONTENT, 
+					1f));
+    		sbVoltage[i].setMax(1400); //ToDo: Add max value
+    		sbVoltage[i].setProgress(0);
+    		llSettings[i].addView(sbVoltage[i]);
+    		
+    		sbVoltage[i].setId(i);
+    		
+    		sbVoltage[i].setOnSeekBarChangeListener(new OnSeekBarChangeListener() {       
+    		    @Override       
+    		    public void onProgressChanged(SeekBar seekBar, int progress,boolean fromUser) {     
+    		    	tvVoltage[seekBar.getId()].setText(progress + "mV");
+    		    }
+
+				@Override
+				public void onStartTrackingTouch(SeekBar seekBar) {
+					// TODO Auto-generated method stub
+				}
+
+				@Override
+				public void onStopTrackingTouch(SeekBar seekBar) {
+					// TODO Auto-generated method stub
+				}
+    		});
+
+			// Add voltage textview
+    		tvVoltage[i] = new TextView(this);
+    		tvVoltage[i].setText("0mv");
+    		tvVoltage[i].setLayoutParams(new TableLayout.LayoutParams(
+					LayoutParams.WRAP_CONTENT, 
+					LayoutParams.WRAP_CONTENT, 
+					2f));
+    		llSettings[i].addView(tvVoltage[i]);
+   		
+			ll.addView(llSettings[i]);
+		}
+    	
+    	this.setContentView(sv);
+    }
 
 }
