@@ -15,7 +15,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:lines="3"
-        android:text="This application requires the franco.Kernel."
+        android:text="This application requires a supported kernel."
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
@@ -23,7 +23,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:lines="4"
-        android:text="It has been tested on the Nexus 4 with franko.Kernel r203."
+        android:text="It has been tested on the Nexus 4 with Franko and Bricked kernels."
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
@@ -46,7 +46,7 @@
         android:id="@+id/textView5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text=""
+        android:text="Please use this application with caution. It can damage your device. No Guarantees! If it kills your device, I am NOT responsible!"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </LinearLayout>

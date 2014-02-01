@@ -1,3 +1,10 @@
+/*
+* This file is part of Multi Core Control.
+*
+* Copyright Shaun Simpson <shauns2029@gmail.com>
+*
+*/
+
 package uk.co.immutablefix.multicorecontrol;
 
 import android.os.Bundle;
@@ -13,7 +20,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.SeekBar;
@@ -26,10 +32,11 @@ import uk.co.immutablefix.multicorecontrol.R;
 
 
 public class MainActivity extends Activity {
-	TextView [] tvVoltage;
-	SeekBar [] sbVoltage;
+	TextView [] tvVoltages;
+	SeekBar [] sbVoltages;
 	int MIN_VOLTAGE = 700;
-	int MAX_VOLTAGE = 1150;
+	int MAX_VOLTAGE = 1400;
+	VoltageControl vc = null;
 
 	CheckBox cbxBoot;
 	SharedPreferences prefs;
@@ -38,7 +45,7 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-		VoltageControl vc = new VoltageControl();
+		vc = new VoltageControl();
 
 	    try {
 			addVoltageUI(vc.getFrequencies());
@@ -85,8 +92,8 @@ public class MainActivity extends Activity {
     	LinearLayout [] llSettings;    	
 
     	llSettings = new LinearLayout[freqs.length]; 
-    	tvVoltage = new TextView[freqs.length];
-    	sbVoltage = new SeekBar[freqs.length];
+    	tvVoltages = new TextView[freqs.length];
+    	sbVoltages = new SeekBar[freqs.length];
     	
     	ScrollView sv = new ScrollView(this);
     	LinearLayout ll = new LinearLayout(this);
@@ -113,21 +120,21 @@ public class MainActivity extends Activity {
 			llSettings[i].addView(tv);
 			
     		// Add voltage textview
-    		sbVoltage[i] = new SeekBar(this);
-    		sbVoltage[i].setLayoutParams(new TableLayout.LayoutParams(
+    		sbVoltages[i] = new SeekBar(this);
+    		sbVoltages[i].setLayoutParams(new TableLayout.LayoutParams(
 					LayoutParams.MATCH_PARENT, 
 					LayoutParams.WRAP_CONTENT, 
 					1f));
-    		sbVoltage[i].setMax(MAX_VOLTAGE - MIN_VOLTAGE); //ToDo: Add max value
-    		sbVoltage[i].setProgress(0);
-    		llSettings[i].addView(sbVoltage[i]);
+    		sbVoltages[i].setMax(MAX_VOLTAGE - MIN_VOLTAGE); //ToDo: Add max value
+    		sbVoltages[i].setProgress(0);
+    		llSettings[i].addView(sbVoltages[i]);
     		
-    		sbVoltage[i].setId(i);
+    		sbVoltages[i].setId(i);
     		
-    		sbVoltage[i].setOnSeekBarChangeListener(new OnSeekBarChangeListener() {       
+    		sbVoltages[i].setOnSeekBarChangeListener(new OnSeekBarChangeListener() {       
     		    @Override       
     		    public void onProgressChanged(SeekBar seekBar, int progress,boolean fromUser) {     
-    		    	tvVoltage[seekBar.getId()].setText(progress + MIN_VOLTAGE + "mV");
+    		    	tvVoltages[seekBar.getId()].setText(progress + MIN_VOLTAGE + "mV");
     		    }
 
 				@Override
@@ -142,13 +149,13 @@ public class MainActivity extends Activity {
     		});
 
 			// Add voltage textview
-    		tvVoltage[i] = new TextView(this);
-    		tvVoltage[i].setText(MIN_VOLTAGE + "mV");
-    		tvVoltage[i].setLayoutParams(new TableLayout.LayoutParams(
+    		tvVoltages[i] = new TextView(this);
+    		tvVoltages[i].setText(MIN_VOLTAGE + "mV");
+    		tvVoltages[i].setLayoutParams(new TableLayout.LayoutParams(
 					LayoutParams.WRAP_CONTENT, 
 					LayoutParams.WRAP_CONTENT, 
 					2f));
-    		llSettings[i].addView(tvVoltage[i]);
+    		llSettings[i].addView(tvVoltages[i]);
 			ll.addView(llSettings[i]);
 		}
     	
@@ -170,9 +177,9 @@ public class MainActivity extends Activity {
         btnDown.setOnClickListener(new OnClickListener (){
 			@Override
 			public void onClick(View v) {
-				for (int i=0; i<sbVoltage.length; i++)
+				for (int i=0; i<sbVoltages.length; i++)
 				{
-					sbVoltage[i].setProgress(sbVoltage[i].getProgress() - 10);
+					sbVoltages[i].setProgress(sbVoltages[i].getProgress() - 10);
 				}
 			}
     	});
@@ -185,9 +192,9 @@ public class MainActivity extends Activity {
         btnUp.setOnClickListener(new OnClickListener (){
 			@Override
 			public void onClick(View v) {
-				for (int i=0; i<sbVoltage.length; i++)
+				for (int i=0; i<sbVoltages.length; i++)
 				{
-					sbVoltage[i].setProgress(sbVoltage[i].getProgress() + 10);
+					sbVoltages[i].setProgress(sbVoltages[i].getProgress() + 10);
 				}
 			}
     	});
@@ -210,8 +217,16 @@ public class MainActivity extends Activity {
     	btnApply.setOnClickListener(new OnClickListener (){
 			@Override
 			public void onClick(View v) {
-				VoltageControl vc = new VoltageControl();
- 				vc.setVoltages(getApplicationContext(), getUiVoltages());
+ 				try {
+					vc.setVoltages(getUiVoltages());
+					Toast.makeText(getApplicationContext(),
+							"Successfully set CPU voltages.", 
+			    			Toast.LENGTH_LONG).show();
+				} catch (Exception e) {
+					Toast.makeText(getApplicationContext(),
+							"Error setting CPU voltages. " + e.getMessage(),
+					  		Toast.LENGTH_LONG).show();
+				}
 			}
     	});
     	llbtn2.addView(btnApply);
@@ -224,7 +239,7 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				SharedPreferences.Editor e = prefs.edit();
-				e.putString("CustomVoltages", getUiVoltages());
+				e.putString("CustomVoltages", getVoltages());
 				e.commit(); // this saves to disk and notifies observers
 			}
     	});
@@ -240,7 +255,17 @@ public class MainActivity extends Activity {
 				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 				String volts = prefs.getString("CustomVoltages", null);
 				if (volts != null){
-					setUiVoltages(volts);
+					try {
+						setUiVoltages(volts);
+					} catch (Exception e) {
+						Toast.makeText(getApplicationContext(),
+								"No settings saved.",
+						  		Toast.LENGTH_LONG).show();
+					}
+				} else {
+					Toast.makeText(getApplicationContext(),
+							"No settings saved.",
+					  		Toast.LENGTH_LONG).show();
 				}
 					
 			}
@@ -269,87 +294,50 @@ public class MainActivity extends Activity {
     	this.setContentView(sv);
     }
     
-    public void setUiVoltages(int [] voltages){
+    public void setUiVoltages(int [] voltages) throws Exception{
+    	if (voltages.length != sbVoltages.length){
+    		throw new Exception("Failed to set voltages, incorrect number of voltages.");
+    	}
+    	
     	for(int i=0; i<voltages.length; i++){
-    		sbVoltage[i].setProgress(voltages[i] - MIN_VOLTAGE);
+    		sbVoltages[i].setProgress(voltages[i] - MIN_VOLTAGE);
     	}
     }
     
-    public void setUiVoltages(String volts){
+    public void setUiVoltages(String volts) throws Exception{
     	String[] voltages = volts.split("[ ]+");
+
+    	if (voltages.length != sbVoltages.length){
+    		throw new Exception("Failed to set voltages, incorrect number of voltages.");
+    	}
+    	
     	//ToDo: Error if voltages count is wrong.
-    	if (sbVoltage.length == sbVoltage.length){
+    	if (sbVoltages.length == sbVoltages.length){
 	    	for(int i=0; i<voltages.length; i++){
-	    		sbVoltage[i].setProgress(Integer.parseInt(voltages[i]) - MIN_VOLTAGE);
+	    		sbVoltages[i].setProgress(Integer.parseInt(voltages[i]) - MIN_VOLTAGE);
 	    	}
     	}
     }
 
-    public String getUiVoltages(){
-		String volts = "";
-		for(int i=0; i<sbVoltage.length; i++)
+    public int[] getUiVoltages(){
+		int[] volts = new int[sbVoltages.length];
+
+		for(int i=0; i<sbVoltages.length; i++)
 		{
-			volts += String.valueOf(sbVoltage[i].getProgress() + MIN_VOLTAGE);
-			if (i<sbVoltage.length-1) volts += " ";
+			volts[i] = sbVoltages[i].getProgress() + MIN_VOLTAGE;
+		}
+		return volts;
+    }
+
+    public String getVoltages(){
+		String volts = "";
+
+		for(int i=0; i<sbVoltages.length; i++)
+		{
+			volts += sbVoltages[i].getProgress() + MIN_VOLTAGE; 
+			if (i < sbVoltages.length - 1) volts += " ";
 		}
 		return volts;
     }
 }
 
-/*
- * 		setContentView(R.layout.activity_main);
-
-		editDefault = (EditText) findViewById(R.id.editDefault);
-		editCustom = (EditText) findViewById(R.id.editCustom);
-		
-		editDefault.setText(VoltageControl.defaultVoltages); 
-		
-		prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-		editCustom.setText(prefs.getString("CustomVoltages", VoltageControl.defaultCustomVoltages));
-		
-	    Button btnApplyCustom = (Button) findViewById(R.id.buttonApplyCustom);
-	    btnApplyCustom.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				VoltageControl vc = new VoltageControl();
-
- 				if (vc.setVoltages(getApplicationContext(), editCustom.getText().toString()) == 0) {
-					SharedPreferences.Editor e = prefs.edit();
-					e.putString("CustomVoltages", editCustom.getText().toString());
-					e.commit(); // this saves to disk and notifies observers
- 				}
-			}
-		});		
-
-	    Button btnApplyDefault = (Button) findViewById(R.id.buttonApplyDefault);
-	    btnApplyDefault.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				VoltageControl vc = new VoltageControl();
-
- 				vc.setVoltages(getApplicationContext(), editDefault.getText().toString());
-			}
-		});		
-
-	    cbxBoot = (CheckBox) findViewById(R.id.checkBoxBoot);
-	    cbxBoot.setChecked(prefs.getBoolean("ApplyOnBoot", false)); 
-	    cbxBoot.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Boolean applyOnBoot = cbxBoot.isChecked();
-				
-				SharedPreferences.Editor e = prefs.edit();
-				e.putBoolean("ApplyOnBoot", applyOnBoot);
-				e.commit(); // this saves to disk and notifies observers
-			}
-		});		
-
-	    Button btnReset = (Button) findViewById(R.id.buttonReset);
-	    btnReset.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				editDefault.setText(VoltageControl.defaultVoltages); 
-				editCustom.setText(VoltageControl.defaultCustomVoltages); 
-			}
-		});		
- */

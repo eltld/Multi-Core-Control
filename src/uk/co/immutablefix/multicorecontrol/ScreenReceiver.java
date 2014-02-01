@@ -1,3 +1,10 @@
+/*
+* This file is part of Multi Core Control.
+*
+* Copyright Shaun Simpson <shauns2029@gmail.com>
+*
+*/
+
 package uk.co.immutablefix.multicorecontrol;
 
 import android.content.BroadcastReceiver;
@@ -32,24 +39,18 @@ public class ScreenReceiver extends BroadcastReceiver {
 		{
 			VoltageControl vc = new VoltageControl();
 	
-			int err = vc.setVoltages(context, prefs.getString("CustomVoltages", VoltageControl.defaultCustomVoltages));
+			String voltages = prefs.getString("CustomVoltages", VoltageControl.defaultCustomVoltages);
 			
-			if (err == 0) {
-		    	  Toast.makeText(context,
-		    			"Successfully set CPU voltages.", 
+			try {
+				vc.setVoltages(voltages);
+				Toast.makeText(context,
+						"Successfully set CPU voltages.", 
 		    			Toast.LENGTH_LONG).show();
-			} else if (err == 1){
-		    	  Toast.makeText(context,
-		    			"Error setting CPU voltages.",
-		    			Toast.LENGTH_LONG).show();  
-			} else {
-	    	  Toast.makeText(context,
-	    			"Error setting CPU voltages, failed to get root permissions.",
-	    			Toast.LENGTH_LONG).show();
+			} catch (Exception e) {
+				Toast.makeText(context,
+						"Error setting CPU voltages. " + e.getMessage(),
+				  		Toast.LENGTH_LONG).show();
 			}
 		}
-
-//		BackgroundService.launchService(context);		
-		
 	}
 }

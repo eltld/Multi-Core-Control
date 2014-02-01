@@ -1,3 +1,10 @@
+/*
+* This file is part of Multi Core Control.
+*
+* Copyright Shaun Simpson <shauns2029@gmail.com>
+*
+*/
+
 package uk.co.immutablefix.multicorecontrol;
 
 
