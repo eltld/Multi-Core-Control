@@ -12,6 +12,7 @@ import android.preference.PreferenceManager;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,6 +21,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.SeekBar;
@@ -34,9 +36,18 @@ import uk.co.immutablefix.multicorecontrol.R;
 public class MainActivity extends Activity {
 	TextView [] tvVoltages;
 	SeekBar [] sbVoltages;
+	ImageView [] imgPlus;
+	ImageView [] imgMinus;
 	int MIN_VOLTAGE = 700;
 	int MAX_VOLTAGE = 1400;
 	VoltageControl vc = null;
+
+	int idImageMinus = 0;
+	int idImagePlus = 0;
+	int idImageMinusRed = 0;
+	int idImagePlusRed = 0;
+	
+	int [] appliedVoltages = null;
 
 	CheckBox cbxBoot;
 	SharedPreferences prefs;
@@ -56,7 +67,8 @@ public class MainActivity extends Activity {
 		}
 	    
 	    try {
-			setUiVoltages(vc.getVoltages());
+	    	appliedVoltages = vc.getVoltages(); 
+			setUiVoltages(appliedVoltages);
 		} catch (Exception e) {
 			Toast.makeText(getApplicationContext(),
 					"Error getting CPU voltages. " + e.getMessage(),
@@ -94,14 +106,27 @@ public class MainActivity extends Activity {
     	llSettings = new LinearLayout[freqs.length]; 
     	tvVoltages = new TextView[freqs.length];
     	sbVoltages = new SeekBar[freqs.length];
+    	imgMinus = new ImageView[freqs.length];
+    	imgPlus = new ImageView[freqs.length];
     	
     	ScrollView sv = new ScrollView(this);
     	LinearLayout ll = new LinearLayout(this);
     	ll.setOrientation(LinearLayout.VERTICAL);
     	sv.addView(ll);
 
-    	for (int i=0; i < llSettings.length; i++){
+		idImageMinus = getResources().getIdentifier("drawable/round_minus", "drawable", getPackageName());
+		idImagePlus = getResources().getIdentifier("drawable/round_plus", "drawable", getPackageName());
+		idImageMinusRed = getResources().getIdentifier("drawable/round_minus_red", "drawable", getPackageName());
+		idImagePlusRed = getResources().getIdentifier("drawable/round_plus_red", "drawable", getPackageName());
 
+		TableLayout.LayoutParams params = new TableLayout.LayoutParams(
+				LayoutParams.WRAP_CONTENT, 
+				LayoutParams.WRAP_CONTENT, 
+				2f);
+		
+		LinearLayout.LayoutParams imgParams = new LinearLayout.LayoutParams(90, 90);
+
+		for (int i=0; i < llSettings.length; i++){
     		llSettings[i] = new LinearLayout(this);
     		llSettings[i].setPadding(20, 20, 20, 20);
     		llSettings[i].setOrientation(LinearLayout.HORIZONTAL);
@@ -112,12 +137,22 @@ public class MainActivity extends Activity {
     		
     		// Add frequency textview
     		TextView tv = new TextView(this);
-			tv.setText(freqs[i] + "MHz");
-			tv.setLayoutParams(new TableLayout.LayoutParams(
-					LayoutParams.WRAP_CONTENT, 
-					LayoutParams.WRAP_CONTENT, 
-					2f));
+			tv.setText(freqs[i] + " MHz");
+			tv.setLayoutParams(params);
 			llSettings[i].addView(tv);
+			
+			imgMinus[i] = new ImageView(getApplicationContext());
+			imgMinus[i].setId(i);
+			imgMinus[i].setPadding(5, 0, 10, 0);
+			imgMinus[i].setLayoutParams(imgParams);
+			imgMinus[i].setImageResource(idImageMinus);
+			imgMinus[i].setOnClickListener(new OnClickListener(){
+				@Override
+				public void onClick(View v) {
+					sbVoltages[v.getId()].setProgress(sbVoltages[v.getId()].getProgress() - 5);
+				}
+			}); 
+    		llSettings[i].addView(imgMinus[i]);
 			
     		// Add voltage textview
     		sbVoltages[i] = new SeekBar(this);
@@ -133,8 +168,10 @@ public class MainActivity extends Activity {
     		
     		sbVoltages[i].setOnSeekBarChangeListener(new OnSeekBarChangeListener() {       
     		    @Override       
-    		    public void onProgressChanged(SeekBar seekBar, int progress,boolean fromUser) {     
-    		    	tvVoltages[seekBar.getId()].setText(progress + MIN_VOLTAGE + "mV");
+    		    public void onProgressChanged(SeekBar seekBar, int progress,boolean fromUser) {
+    		    	int i = seekBar.getId();
+    		    	tvVoltages[i].setText(progress + MIN_VOLTAGE + " mV");
+    		    	updatePlusMinusImage(i, progress);
     		    }
 
 				@Override
@@ -148,13 +185,23 @@ public class MainActivity extends Activity {
 				}
     		});
 
+			imgPlus[i] = new ImageView(getApplicationContext());
+			imgPlus[i].setId(i);
+			imgPlus[i].setPadding(5, 0, 10, 0);
+			imgPlus[i].setLayoutParams(imgParams);
+			imgPlus[i].setImageResource(idImagePlus);
+			imgPlus[i].setOnClickListener(new OnClickListener(){
+				@Override
+				public void onClick(View v) {
+					sbVoltages[v.getId()].setProgress(sbVoltages[v.getId()].getProgress() + 5);
+				}
+			}); 
+    		llSettings[i].addView(imgPlus[i]);
+    		
 			// Add voltage textview
     		tvVoltages[i] = new TextView(this);
-    		tvVoltages[i].setText(MIN_VOLTAGE + "mV");
-    		tvVoltages[i].setLayoutParams(new TableLayout.LayoutParams(
-					LayoutParams.WRAP_CONTENT, 
-					LayoutParams.WRAP_CONTENT, 
-					2f));
+    		tvVoltages[i].setText(MIN_VOLTAGE + " mV");
+    		tvVoltages[i].setLayoutParams(params);
     		llSettings[i].addView(tvVoltages[i]);
 			ll.addView(llSettings[i]);
 		}
@@ -167,8 +214,20 @@ public class MainActivity extends Activity {
 				LayoutParams.MATCH_PARENT, 
 				1f));
 
-    	LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, 1f);
+    	Button btnDown5 = new Button(this);
+        params.gravity=Gravity.LEFT;
+        btnDown5.setLayoutParams(params);
+        btnDown5.setText("-5 mV");
+        btnDown5.setOnClickListener(new OnClickListener (){
+			@Override
+			public void onClick(View v) {
+				for (int i=0; i<sbVoltages.length; i++)
+				{
+					sbVoltages[i].setProgress(sbVoltages[i].getProgress() - 5);
+				}
+			}
+    	});
+    	llbtn.addView(btnDown5);
 
     	Button btnDown = new Button(this);
         params.gravity=Gravity.LEFT;
@@ -184,6 +243,21 @@ public class MainActivity extends Activity {
 			}
     	});
     	llbtn.addView(btnDown);
+    	
+    	Button btnUp5 = new Button(this);
+        params.gravity=Gravity.RIGHT;
+        btnUp5.setLayoutParams(params);
+        btnUp5.setText("+ 5 mV");
+        btnUp5.setOnClickListener(new OnClickListener (){
+			@Override
+			public void onClick(View v) {
+				for (int i=0; i<sbVoltages.length; i++)
+				{
+					sbVoltages[i].setProgress(sbVoltages[i].getProgress() + 5);
+				}
+			}
+    	});
+    	llbtn.addView(btnUp5);
 
     	Button btnUp = new Button(this);
         params.gravity=Gravity.RIGHT;
@@ -219,6 +293,9 @@ public class MainActivity extends Activity {
 			public void onClick(View v) {
  				try {
 					vc.setVoltages(getUiVoltages());
+			    	appliedVoltages = vc.getVoltages();
+			    	updateUI();
+			    	
 					Toast.makeText(getApplicationContext(),
 							"Successfully set CPU voltages.", 
 			    			Toast.LENGTH_LONG).show();
@@ -294,6 +371,26 @@ public class MainActivity extends Activity {
     	this.setContentView(sv);
     }
     
+    public void updateUI() {
+    	for (int i = 0; i < sbVoltages.length; i++){
+    		updatePlusMinusImage(i, sbVoltages[i].getProgress());
+    	}
+    }
+
+    public void updatePlusMinusImage(int i, int progress){
+    	imgMinus[i].setImageResource(idImageMinus);
+		imgPlus[i].setImageResource(idImagePlus);
+    	
+    	if (appliedVoltages.length == tvVoltages.length){
+	    	if (appliedVoltages[i] > progress + MIN_VOLTAGE) { 
+	    		imgMinus[i].setImageResource(idImageMinusRed);
+    		} else if (appliedVoltages[i] < progress + MIN_VOLTAGE) { 
+	    		imgPlus[i].setImageResource(idImagePlusRed);
+	    	}
+    	}
+	
+    }
+    
     public void setUiVoltages(int [] voltages) throws Exception{
     	if (voltages.length != sbVoltages.length){
     		throw new Exception("Failed to set voltages, incorrect number of voltages.");
@@ -308,7 +405,7 @@ public class MainActivity extends Activity {
     	String[] voltages = volts.split("[ ]+");
 
     	if (voltages.length != sbVoltages.length){
-    		throw new Exception("Failed to set voltages, incorrect number of voltages.");
+    		throw new Exception("Failed to update UI voltages.");
     	}
     	
     	//ToDo: Error if voltages count is wrong.
