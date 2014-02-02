@@ -1,7 +1,7 @@
 Multi-Core-Control
 ==================
 
-Android application that sets voltages for the Nexus 4 (requires franco.kernel)
+Android application that sets voltages for the Nexus 4 (requires supported kernel)
 
 WARNING: 
   This app could destroy your CPU. 
