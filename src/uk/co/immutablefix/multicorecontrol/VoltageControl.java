@@ -20,6 +20,8 @@ import com.stericson.RootTools.execution.CommandCapture;
 import com.stericson.RootTools.execution.Shell;
 
 public class VoltageControl {
+	static final int MIN_VOLTAGE = 700;
+	static final int MAX_VOLTAGE = 1400;	
 	static String defaultVoltages = "850 875 900 925 975 1000 1025 1075 1100 1125 1137 1150";
 	static String defaultCustomVoltages = "700 725 750 775 825 850 875 925 950 975 990 1000";
     private String output;
@@ -186,7 +188,7 @@ public class VoltageControl {
 		// Check value of parameters
 		for(int i=0; i<voltages.length; i++)
 		{
-			if ((voltages[i] < 700) || (voltages[i] > 1400)){
+			if ((voltages[i] < MIN_VOLTAGE) || (voltages[i] > MAX_VOLTAGE)){
 				throw new Exception("Failed to set voltages, incorrect parameters.");
 			}
 		}
@@ -194,12 +196,6 @@ public class VoltageControl {
 		if (RootTools.exists("/sys/devices/system/cpu/cpufreq/vdd_table/vdd_levels")) {
 			vdd = true;
 			tablePath = "/sys/devices/system/cpu/cpufreq/vdd_table/vdd_levels";
-			// VDD table uses uV and KHz.  
-			for(int i=0; i<voltages.length; i++)
-			{
-				voltages[i] = voltages[i] * 1000;
-				freqs[i] = freqs[i] * 1000;
-			}
 		} else if (RootTools.exists("/sys/devices/system/cpu/cpu0/cpufreq/UV_mV_table")) {
 			tablePath = "/sys/devices/system/cpu/cpu0/cpufreq/UV_mV_table";
 		} else {
@@ -218,7 +214,8 @@ public class VoltageControl {
 
 				for(int i=0; i<voltages.length; i++)
 				{
-					commands[i] = new CommandCapture(0,	"echo " + freqs[i] + " " + voltages[i] + " > " + tablePath);
+					commands[i] = new CommandCapture(0,	"echo " + freqs[i] * 1000 + " " 
+							+ voltages[i] * 1000 + " > " + tablePath);
 					shell.add(commands[i]);
 					commandWait(commands[i]);
 				}

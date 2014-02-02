@@ -38,8 +38,6 @@ public class MainActivity extends Activity {
 	SeekBar [] sbVoltages;
 	ImageView [] imgPlus;
 	ImageView [] imgMinus;
-	int MIN_VOLTAGE = 700;
-	int MAX_VOLTAGE = 1400;
 	VoltageControl vc = null;
 
 	int idImageMinus = 0;
@@ -160,7 +158,7 @@ public class MainActivity extends Activity {
 					LayoutParams.MATCH_PARENT, 
 					LayoutParams.WRAP_CONTENT, 
 					1f));
-    		sbVoltages[i].setMax(MAX_VOLTAGE - MIN_VOLTAGE); //ToDo: Add max value
+    		sbVoltages[i].setMax(VoltageControl.MAX_VOLTAGE - VoltageControl.MIN_VOLTAGE); //ToDo: Add max value
     		sbVoltages[i].setProgress(0);
     		llSettings[i].addView(sbVoltages[i]);
     		
@@ -170,7 +168,7 @@ public class MainActivity extends Activity {
     		    @Override       
     		    public void onProgressChanged(SeekBar seekBar, int progress,boolean fromUser) {
     		    	int i = seekBar.getId();
-    		    	tvVoltages[i].setText(progress + MIN_VOLTAGE + " mV");
+    		    	tvVoltages[i].setText(progress + VoltageControl.MIN_VOLTAGE + " mV");
     		    	updatePlusMinusImage(i, progress);
     		    }
 
@@ -200,7 +198,7 @@ public class MainActivity extends Activity {
     		
 			// Add voltage textview
     		tvVoltages[i] = new TextView(this);
-    		tvVoltages[i].setText(MIN_VOLTAGE + " mV");
+    		tvVoltages[i].setText(VoltageControl.MIN_VOLTAGE + " mV");
     		tvVoltages[i].setLayoutParams(params);
     		llSettings[i].addView(tvVoltages[i]);
 			ll.addView(llSettings[i]);
@@ -298,7 +296,7 @@ public class MainActivity extends Activity {
 			    	
 					Toast.makeText(getApplicationContext(),
 							"Successfully set CPU voltages.", 
-			    			Toast.LENGTH_LONG).show();
+			    			Toast.LENGTH_SHORT).show();
 				} catch (Exception e) {
 					Toast.makeText(getApplicationContext(),
 							"Error setting CPU voltages. " + e.getMessage(),
@@ -382,9 +380,9 @@ public class MainActivity extends Activity {
 		imgPlus[i].setImageResource(idImagePlus);
     	
     	if (appliedVoltages.length == tvVoltages.length){
-	    	if (appliedVoltages[i] > progress + MIN_VOLTAGE) { 
+	    	if (appliedVoltages[i] > progress + VoltageControl.MIN_VOLTAGE) { 
 	    		imgMinus[i].setImageResource(idImageMinusRed);
-    		} else if (appliedVoltages[i] < progress + MIN_VOLTAGE) { 
+    		} else if (appliedVoltages[i] < progress + VoltageControl.MIN_VOLTAGE) { 
 	    		imgPlus[i].setImageResource(idImagePlusRed);
 	    	}
     	}
@@ -397,7 +395,7 @@ public class MainActivity extends Activity {
     	}
     	
     	for(int i=0; i<voltages.length; i++){
-    		sbVoltages[i].setProgress(voltages[i] - MIN_VOLTAGE);
+    		sbVoltages[i].setProgress(voltages[i] - VoltageControl.MIN_VOLTAGE);
     	}
     }
     
@@ -411,7 +409,7 @@ public class MainActivity extends Activity {
     	//ToDo: Error if voltages count is wrong.
     	if (sbVoltages.length == sbVoltages.length){
 	    	for(int i=0; i<voltages.length; i++){
-	    		sbVoltages[i].setProgress(Integer.parseInt(voltages[i]) - MIN_VOLTAGE);
+	    		sbVoltages[i].setProgress(Integer.parseInt(voltages[i]) - VoltageControl.MIN_VOLTAGE);
 	    	}
     	}
     }
@@ -421,7 +419,7 @@ public class MainActivity extends Activity {
 
 		for(int i=0; i<sbVoltages.length; i++)
 		{
-			volts[i] = sbVoltages[i].getProgress() + MIN_VOLTAGE;
+			volts[i] = sbVoltages[i].getProgress() + VoltageControl.MIN_VOLTAGE;
 		}
 		return volts;
     }
@@ -431,7 +429,7 @@ public class MainActivity extends Activity {
 
 		for(int i=0; i<sbVoltages.length; i++)
 		{
-			volts += sbVoltages[i].getProgress() + MIN_VOLTAGE; 
+			volts += sbVoltages[i].getProgress() + VoltageControl.MIN_VOLTAGE; 
 			if (i < sbVoltages.length - 1) volts += " ";
 		}
 		return volts;
