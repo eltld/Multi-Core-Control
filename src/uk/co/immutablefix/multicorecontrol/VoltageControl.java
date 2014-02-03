@@ -22,8 +22,7 @@ import com.stericson.RootTools.execution.Shell;
 public class VoltageControl {
 	static final int MIN_VOLTAGE = 700;
 	static final int MAX_VOLTAGE = 1400;	
-	static String defaultVoltages = "850 875 900 925 975 1000 1025 1075 1100 1125 1137 1150";
-	static String defaultCustomVoltages = "700 725 750 775 825 850 875 925 950 975 990 1000";
+
     private String output;
     private int []frequencies = null;
 

@@ -35,21 +35,45 @@ public class ScreenReceiver extends BroadcastReceiver {
 		runnable.run();
 
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-		if (prefs.getBoolean("ApplyOnBoot", false))
+		if (prefs.getBoolean("VoltagesApplyOnBoot", false))
 		{
 			VoltageControl vc = new VoltageControl();
 	
-			String voltages = prefs.getString("CustomVoltages", VoltageControl.defaultCustomVoltages);
+			String voltages = prefs.getString("CustomVoltages", null);
 			
-			try {
-				vc.setVoltages(voltages);
-				Toast.makeText(context,
-						"Successfully set CPU voltages.", 
-		    			Toast.LENGTH_LONG).show();
-			} catch (Exception e) {
-				Toast.makeText(context,
-						"Error setting CPU voltages. " + e.getMessage(),
-				  		Toast.LENGTH_LONG).show();
+			if (voltages != null) {
+				try {
+					vc.setVoltages(voltages);
+					Toast.makeText(context,
+							"Successfully set CPU voltages.", 
+			    			Toast.LENGTH_SHORT).show();
+				} catch (Exception e) {
+					Toast.makeText(context,
+							"Error setting CPU voltages. " + e.getMessage(),
+					  		Toast.LENGTH_LONG).show();
+				}
+			}
+		}
+		
+		if (prefs.getBoolean("MPDApplyOnBoot", false))
+		{
+	        MPDecision mpd = new MPDecision();
+	
+			int min = prefs.getInt("MinCPUs", 0);
+			int max = prefs.getInt("MaxCPUs", 0);
+
+			if ((min > 0) && (max > 0)) {
+				try {
+				        mpd.setMinCPUs(min);
+				        mpd.setMaxCPUs(max);
+						Toast.makeText(context,
+								"Successfully configured MPD.", 
+				    			Toast.LENGTH_SHORT).show();
+				} catch (Exception e) {
+					Toast.makeText(context,
+							"Error configuring MPD. " + e.getMessage(),
+					  		Toast.LENGTH_LONG).show();
+				}
 			}
 		}
 	}

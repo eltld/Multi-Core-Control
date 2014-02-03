@@ -12,7 +12,6 @@ import android.preference.PreferenceManager;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.drawable.Drawable;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -72,8 +71,19 @@ public class MainActivity extends Activity {
 					"Error getting CPU voltages. " + e.getMessage(),
 			  		Toast.LENGTH_LONG).show();
 		}
+		
 	}
 
+    @Override
+    public void onDestroy(){
+    	super.onDestroy();
+    }	
+
+    @Override
+    public void onRestart(){
+    	super.onRestart();
+    }	
+    
     //Creates menus
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -86,6 +96,10 @@ public class MainActivity extends Activity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
     	switch(item.getItemId()) {
+    	case R.id.mitmMPDecision:
+    		Intent mpd = new Intent(this, MPDecisionActivity.class);
+    		startActivity(mpd);
+    		return true;
     	case R.id.mitmAbout:
     		Intent about = new Intent(this, AboutActivity.class);
     		startActivity(about);
@@ -160,14 +174,11 @@ public class MainActivity extends Activity {
 					1f));
     		sbVoltages[i].setMax(VoltageControl.MAX_VOLTAGE - VoltageControl.MIN_VOLTAGE); //ToDo: Add max value
     		sbVoltages[i].setProgress(0);
-    		llSettings[i].addView(sbVoltages[i]);
-    		
-    		sbVoltages[i].setId(i);
-    		
+    		sbVoltages[i].setTag(i);
     		sbVoltages[i].setOnSeekBarChangeListener(new OnSeekBarChangeListener() {       
     		    @Override       
     		    public void onProgressChanged(SeekBar seekBar, int progress,boolean fromUser) {
-    		    	int i = seekBar.getId();
+    		    	int i = (Integer) seekBar.getTag();
     		    	tvVoltages[i].setText(progress + VoltageControl.MIN_VOLTAGE + " mV");
     		    	updatePlusMinusImage(i, progress);
     		    }
@@ -182,6 +193,8 @@ public class MainActivity extends Activity {
 					// TODO Auto-generated method stub
 				}
     		});
+
+    		llSettings[i].addView(sbVoltages[i]);
 
 			imgPlus[i] = new ImageView(getApplicationContext());
 			imgPlus[i].setId(i);
@@ -201,9 +214,11 @@ public class MainActivity extends Activity {
     		tvVoltages[i].setText(VoltageControl.MIN_VOLTAGE + " mV");
     		tvVoltages[i].setLayoutParams(params);
     		llSettings[i].addView(tvVoltages[i]);
+
 			ll.addView(llSettings[i]);
 		}
-    	
+
+   	
     	LinearLayout llbtn = new LinearLayout(this);
 		llbtn.setPadding(20, 20, 20, 20);
 		llbtn.setOrientation(LinearLayout.HORIZONTAL);
@@ -350,7 +365,7 @@ public class MainActivity extends Activity {
     	ll.addView(llbtn2);
 
     	cbxBoot = new CheckBox(this);
-	    cbxBoot.setChecked(prefs.getBoolean("ApplyOnBoot", false));
+	    cbxBoot.setChecked(prefs.getBoolean("VoltagesApplyOnBoot", false));
 	    cbxBoot.setText("Apply custom voltages on boot");
 	    
 	    cbxBoot.setOnClickListener(new OnClickListener() {
@@ -359,7 +374,7 @@ public class MainActivity extends Activity {
 				Boolean applyOnBoot = cbxBoot.isChecked();
 				
 				SharedPreferences.Editor e = prefs.edit();
-				e.putBoolean("ApplyOnBoot", applyOnBoot);
+				e.putBoolean("VoltagesApplyOnBoot", applyOnBoot);
 				e.commit(); // this saves to disk and notifies observers
 			}
 		});		

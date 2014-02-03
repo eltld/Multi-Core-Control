@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="app_name">Multi Core Control</string>
     <string name="action_settings">Settings</string>
     <string name="quit_label">Quit</string>
-    <string name="quit_shortcut">Quit Short</string>    
-    <string name="about_label">About</string>    
-    <string name="about_shortcut">About Short</string>    
+    <string name="quit_shortcut">Quit Short</string>
+    <string name="about_label">About</string>
+    <string name="about_shortcut">About Short</string>
+    <string name="mpdecision_label">CPU Settings</string>
+    <string name="mpdecision_shortcut">MPDecision Short</string>
+    <string name="title_activity_mpdecision">CPU Settings</string>
+    <string name="hello_world">Hello world!</string>
+
 </resources>
