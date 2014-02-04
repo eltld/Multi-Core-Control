@@ -33,10 +33,13 @@ import uk.co.immutablefix.multicorecontrol.R;
 
 
 public class MainActivity extends Activity {
-	TextView [] tvVoltages;
-	SeekBar [] sbVoltages;
-	ImageView [] imgPlus;
-	ImageView [] imgMinus;
+	static boolean reloading = false;
+	static private ScrollView sv = null;
+	static private LinearLayout ll = null;
+	static private TextView [] tvVoltages = null;
+	static private SeekBar [] sbVoltages = null;
+	static private ImageView [] imgPlus = null;
+	static private ImageView [] imgMinus = null;
 	VoltageControl vc = null;
 
 	int idImageMinus = 0;
@@ -63,20 +66,31 @@ public class MainActivity extends Activity {
 			  		Toast.LENGTH_LONG).show();
 		}
 	    
-	    try {
-	    	appliedVoltages = vc.getVoltages(); 
-			setUiVoltages(appliedVoltages);
-		} catch (Exception e) {
-			Toast.makeText(getApplicationContext(),
-					"Error getting CPU voltages. " + e.getMessage(),
-			  		Toast.LENGTH_LONG).show();
-		}
-		
+	    if (!reloading) {
+		    try {
+		    	appliedVoltages = vc.getVoltages(); 
+				setUiVoltages(appliedVoltages);
+			} catch (Exception e) {
+				Toast.makeText(getApplicationContext(),
+						"Error getting CPU voltages. " + e.getMessage(),
+				  		Toast.LENGTH_LONG).show();
+			}
+	    }
 	}
 
     @Override
     public void onDestroy(){
     	super.onDestroy();
+    	sv.removeAllViews();
+    	if (isFinishing()) {
+    		reloading = false;
+    		sv = null;
+    		ll = null;
+    		tvVoltages = null;
+    		sbVoltages = null;
+    		imgPlus = null;
+    		imgMinus = null;    		
+    	}
     }	
 
     @Override
@@ -113,17 +127,23 @@ public class MainActivity extends Activity {
     }  
     
     public void addVoltageUI(int freqs[]){
-    	LinearLayout [] llSettings;    	
+    	LinearLayout [] llSettings = null;    	
+    	TextView [] tvFrequencies = null;
 
-    	llSettings = new LinearLayout[freqs.length]; 
-    	tvVoltages = new TextView[freqs.length];
-    	sbVoltages = new SeekBar[freqs.length];
-    	imgMinus = new ImageView[freqs.length];
-    	imgPlus = new ImageView[freqs.length];
+    	if ((sv == null) || (sbVoltages.length != freqs.length)) {
+        	llSettings = new LinearLayout[freqs.length];
+	    	tvVoltages = new TextView[freqs.length];
+	    	tvFrequencies = new TextView[freqs.length];
+	    	sbVoltages = new SeekBar[freqs.length];
+	    	imgMinus = new ImageView[freqs.length];
+	    	imgPlus = new ImageView[freqs.length];
+	    	ll = new LinearLayout(this);
+	    	ll.setOrientation(LinearLayout.VERTICAL);
+    	} else {
+    		reloading = true;
+    	}
     	
-    	ScrollView sv = new ScrollView(this);
-    	LinearLayout ll = new LinearLayout(this);
-    	ll.setOrientation(LinearLayout.VERTICAL);
+    	sv = new ScrollView(this);
     	sv.addView(ll);
 
 		idImageMinus = getResources().getIdentifier("drawable/round_minus", "drawable", getPackageName());
@@ -138,249 +158,273 @@ public class MainActivity extends Activity {
 		
 		LinearLayout.LayoutParams imgParams = new LinearLayout.LayoutParams(90, 90);
 
-		for (int i=0; i < llSettings.length; i++){
-    		llSettings[i] = new LinearLayout(this);
-    		llSettings[i].setPadding(20, 20, 20, 20);
-    		llSettings[i].setOrientation(LinearLayout.HORIZONTAL);
-    		llSettings[i].setLayoutParams(new TableLayout.LayoutParams(
-					LayoutParams.MATCH_PARENT, 
-					LayoutParams.WRAP_CONTENT, 
-					1f));
+		if (!reloading)
+		{
+			for (int i=0; i < llSettings.length; i++){
+				llSettings[i] = new LinearLayout(this);
+	    		llSettings[i].setPadding(20, 20, 20, 20);
+	    		llSettings[i].setOrientation(LinearLayout.HORIZONTAL);
+	    		llSettings[i].setLayoutParams(new TableLayout.LayoutParams(
+						LayoutParams.MATCH_PARENT, 
+						LayoutParams.WRAP_CONTENT, 
+						1f));
     		
-    		// Add frequency textview
-    		TextView tv = new TextView(this);
-			tv.setText(freqs[i] + " MHz");
-			tv.setLayoutParams(params);
-			llSettings[i].addView(tv);
+	    		// Add frequency textview
+	    		tvFrequencies[i] = new TextView(this);
+	    		tvFrequencies[i].setText(freqs[i] + " MHz");
+	    		tvFrequencies[i].setLayoutParams(params);
 			
-			imgMinus[i] = new ImageView(getApplicationContext());
-			imgMinus[i].setId(i);
-			imgMinus[i].setPadding(5, 0, 10, 0);
-			imgMinus[i].setLayoutParams(imgParams);
-			imgMinus[i].setImageResource(idImageMinus);
-			imgMinus[i].setOnClickListener(new OnClickListener(){
-				@Override
-				public void onClick(View v) {
-					sbVoltages[v.getId()].setProgress(sbVoltages[v.getId()].getProgress() - 5);
-				}
-			}); 
-    		llSettings[i].addView(imgMinus[i]);
+	    		llSettings[i].addView(tvFrequencies[i]);
 			
-    		// Add voltage textview
-    		sbVoltages[i] = new SeekBar(this);
-    		sbVoltages[i].setLayoutParams(new TableLayout.LayoutParams(
-					LayoutParams.MATCH_PARENT, 
-					LayoutParams.WRAP_CONTENT, 
-					1f));
-    		sbVoltages[i].setMax(VoltageControl.MAX_VOLTAGE - VoltageControl.MIN_VOLTAGE); //ToDo: Add max value
-    		sbVoltages[i].setProgress(0);
-    		sbVoltages[i].setTag(i);
-    		sbVoltages[i].setOnSeekBarChangeListener(new OnSeekBarChangeListener() {       
-    		    @Override       
-    		    public void onProgressChanged(SeekBar seekBar, int progress,boolean fromUser) {
-    		    	int i = (Integer) seekBar.getTag();
-    		    	tvVoltages[i].setText(progress + VoltageControl.MIN_VOLTAGE + " mV");
-    		    	updatePlusMinusImage(i, progress);
-    		    }
+				imgMinus[i] = new ImageView(getApplicationContext());
+				imgMinus[i].setId(i);
+				imgMinus[i].setPadding(5, 0, 10, 0);
+				imgMinus[i].setLayoutParams(imgParams);
+				imgMinus[i].setImageResource(idImageMinus);
+				imgMinus[i].setOnClickListener(new OnClickListener(){
+					@Override
+					public void onClick(View v) {
+						sbVoltages[v.getId()].setProgress(sbVoltages[v.getId()].getProgress() - 5);
+					}
+				});
 
-				@Override
-				public void onStartTrackingTouch(SeekBar seekBar) {
-					// TODO Auto-generated method stub
-				}
+				llSettings[i].addView(imgMinus[i]);
+			
+	    		// Add voltage textview
+	    		sbVoltages[i] = new SeekBar(this);
+	    		sbVoltages[i].setLayoutParams(new TableLayout.LayoutParams(
+						LayoutParams.MATCH_PARENT, 
+						LayoutParams.WRAP_CONTENT, 
+						1f));
+	    		sbVoltages[i].setMax(VoltageControl.MAX_VOLTAGE - VoltageControl.MIN_VOLTAGE); //ToDo: Add max value
+	    		sbVoltages[i].setProgress(0);
+	    		sbVoltages[i].setTag(i);
+	    		sbVoltages[i].setOnSeekBarChangeListener(new OnSeekBarChangeListener() {       
+	    		    @Override       
+	    		    public void onProgressChanged(SeekBar seekBar, int progress,boolean fromUser) {
+	    		    	int i = (Integer) seekBar.getTag();
+	    		    	tvVoltages[i].setText(progress + VoltageControl.MIN_VOLTAGE + " mV");
+	    		    	updatePlusMinusImage(i, progress);
+	    		    }
+	
+					@Override
+					public void onStartTrackingTouch(SeekBar seekBar) {
+						// TODO Auto-generated method stub
+					}
+	
+					@Override
+					public void onStopTrackingTouch(SeekBar seekBar) {
+						// TODO Auto-generated method stub
+					}
+	    		});
 
-				@Override
-				public void onStopTrackingTouch(SeekBar seekBar) {
-					// TODO Auto-generated method stub
-				}
-    		});
+	    		llSettings[i].addView(sbVoltages[i]);
 
-    		llSettings[i].addView(sbVoltages[i]);
-
-			imgPlus[i] = new ImageView(getApplicationContext());
-			imgPlus[i].setId(i);
-			imgPlus[i].setPadding(5, 0, 10, 0);
-			imgPlus[i].setLayoutParams(imgParams);
-			imgPlus[i].setImageResource(idImagePlus);
-			imgPlus[i].setOnClickListener(new OnClickListener(){
-				@Override
-				public void onClick(View v) {
-					sbVoltages[v.getId()].setProgress(sbVoltages[v.getId()].getProgress() + 5);
-				}
-			}); 
-    		llSettings[i].addView(imgPlus[i]);
+				imgPlus[i] = new ImageView(getApplicationContext());
+				imgPlus[i].setId(i);
+				imgPlus[i].setPadding(5, 0, 10, 0);
+				imgPlus[i].setLayoutParams(imgParams);
+				imgPlus[i].setImageResource(idImagePlus);
+				imgPlus[i].setOnClickListener(new OnClickListener(){
+					@Override
+					public void onClick(View v) {
+						sbVoltages[v.getId()].setProgress(sbVoltages[v.getId()].getProgress() + 5);
+					}
+				});
     		
-			// Add voltage textview
-    		tvVoltages[i] = new TextView(this);
-    		tvVoltages[i].setText(VoltageControl.MIN_VOLTAGE + " mV");
-    		tvVoltages[i].setLayoutParams(params);
-    		llSettings[i].addView(tvVoltages[i]);
-
-			ll.addView(llSettings[i]);
-		}
-
+				llSettings[i].addView(imgPlus[i]);
+    		
+				// Add voltage textview
+	    		tvVoltages[i] = new TextView(this);
+	    		tvVoltages[i].setText(VoltageControl.MIN_VOLTAGE + " mV");
+	    		tvVoltages[i].setLayoutParams(params);
+    		
+	    		llSettings[i].addView(tvVoltages[i]);
+	    		ll.addView(llSettings[i]);
+    		}
    	
-    	LinearLayout llbtn = new LinearLayout(this);
-		llbtn.setPadding(20, 20, 20, 20);
-		llbtn.setOrientation(LinearLayout.HORIZONTAL);
-		llbtn.setLayoutParams(new TableLayout.LayoutParams(
-				LayoutParams.MATCH_PARENT, 
-				LayoutParams.MATCH_PARENT, 
-				1f));
-
-    	Button btnDown5 = new Button(this);
-        params.gravity=Gravity.LEFT;
-        btnDown5.setLayoutParams(params);
-        btnDown5.setText("-5 mV");
-        btnDown5.setOnClickListener(new OnClickListener (){
-			@Override
-			public void onClick(View v) {
-				for (int i=0; i<sbVoltages.length; i++)
-				{
-					sbVoltages[i].setProgress(sbVoltages[i].getProgress() - 5);
+	    	LinearLayout llbtn = new LinearLayout(this);
+			llbtn.setPadding(20, 20, 20, 20);
+			llbtn.setOrientation(LinearLayout.HORIZONTAL);
+			llbtn.setLayoutParams(new TableLayout.LayoutParams(
+					LayoutParams.MATCH_PARENT, 
+					LayoutParams.MATCH_PARENT, 
+					1f));
+	
+	    	Button btnDown5 = new Button(this);
+	        params.gravity=Gravity.LEFT;
+	        btnDown5.setLayoutParams(params);
+	        btnDown5.setText("-5 mV");
+	        btnDown5.setOnClickListener(new OnClickListener (){
+				@Override
+				public void onClick(View v) {
+					for (int i=0; i<sbVoltages.length; i++)
+					{
+						sbVoltages[i].setProgress(sbVoltages[i].getProgress() - 5);
+					}
 				}
-			}
-    	});
-    	llbtn.addView(btnDown5);
-
-    	Button btnDown = new Button(this);
-        params.gravity=Gravity.LEFT;
-        btnDown.setLayoutParams(params);
-        btnDown.setText("-10 mV");
-        btnDown.setOnClickListener(new OnClickListener (){
-			@Override
-			public void onClick(View v) {
-				for (int i=0; i<sbVoltages.length; i++)
-				{
-					sbVoltages[i].setProgress(sbVoltages[i].getProgress() - 10);
+	    	});
+	    	llbtn.addView(btnDown5);
+	
+	    	Button btnDown = new Button(this);
+	        params.gravity=Gravity.LEFT;
+	        btnDown.setLayoutParams(params);
+	        btnDown.setText("-25 mV");
+	        btnDown.setOnClickListener(new OnClickListener (){
+				@Override
+				public void onClick(View v) {
+					for (int i=0; i<sbVoltages.length; i++)
+					{
+						sbVoltages[i].setProgress(sbVoltages[i].getProgress() - 25);
+					}
 				}
-			}
-    	});
-    	llbtn.addView(btnDown);
-    	
-    	Button btnUp5 = new Button(this);
-        params.gravity=Gravity.RIGHT;
-        btnUp5.setLayoutParams(params);
-        btnUp5.setText("+ 5 mV");
-        btnUp5.setOnClickListener(new OnClickListener (){
-			@Override
-			public void onClick(View v) {
-				for (int i=0; i<sbVoltages.length; i++)
-				{
-					sbVoltages[i].setProgress(sbVoltages[i].getProgress() + 5);
+	    	});
+	    	llbtn.addView(btnDown);
+	    	
+	    	Button btnUp5 = new Button(this);
+	        params.gravity=Gravity.RIGHT;
+	        btnUp5.setLayoutParams(params);
+	        btnUp5.setText("+ 5 mV");
+	        btnUp5.setOnClickListener(new OnClickListener (){
+				@Override
+				public void onClick(View v) {
+					for (int i=0; i<sbVoltages.length; i++)
+					{
+						sbVoltages[i].setProgress(sbVoltages[i].getProgress() + 5);
+					}
 				}
-			}
-    	});
-    	llbtn.addView(btnUp5);
-
-    	Button btnUp = new Button(this);
-        params.gravity=Gravity.RIGHT;
-        btnUp.setLayoutParams(params);
-        btnUp.setText("+ 10 mV");
-        btnUp.setOnClickListener(new OnClickListener (){
-			@Override
-			public void onClick(View v) {
-				for (int i=0; i<sbVoltages.length; i++)
-				{
-					sbVoltages[i].setProgress(sbVoltages[i].getProgress() + 10);
+	    	});
+	    	llbtn.addView(btnUp5);
+	
+	    	Button btnUp = new Button(this);
+	        params.gravity=Gravity.RIGHT;
+	        btnUp.setLayoutParams(params);
+	        btnUp.setText("+ 25 mV");
+	        btnUp.setOnClickListener(new OnClickListener (){
+				@Override
+				public void onClick(View v) {
+					for (int i=0; i<sbVoltages.length; i++)
+					{
+						sbVoltages[i].setProgress(sbVoltages[i].getProgress() + 25);
+					}
 				}
-			}
-    	});
-    	llbtn.addView(btnUp);
-    	
-    	ll.addView(llbtn);
-
-    	LinearLayout llbtn2 = new LinearLayout(this);
-		llbtn2.setPadding(20, 20, 20, 20);
-		llbtn2.setOrientation(LinearLayout.HORIZONTAL);
-		llbtn2.setLayoutParams(new TableLayout.LayoutParams(
-				LayoutParams.MATCH_PARENT, 
-				LayoutParams.MATCH_PARENT, 
-				1f));
-
-    	Button btnApply = new Button(this);
-        params.gravity=Gravity.LEFT;
-    	btnApply.setLayoutParams(params);
-    	btnApply.setText("Apply");
-    	btnApply.setOnClickListener(new OnClickListener (){
-			@Override
-			public void onClick(View v) {
- 				try {
-					vc.setVoltages(getUiVoltages());
-			    	appliedVoltages = vc.getVoltages();
-			    	updateUI();
-			    	
-					Toast.makeText(getApplicationContext(),
-							"Successfully set CPU voltages.", 
-			    			Toast.LENGTH_SHORT).show();
-				} catch (Exception e) {
-					Toast.makeText(getApplicationContext(),
-							"Error setting CPU voltages. " + e.getMessage(),
-					  		Toast.LENGTH_LONG).show();
-				}
-			}
-    	});
-    	llbtn2.addView(btnApply);
-
-    	Button btnSave = new Button(this);
-        params.gravity=Gravity.CENTER;
-    	btnSave.setLayoutParams(params);
-    	btnSave.setText("Save");
-    	btnSave.setOnClickListener(new OnClickListener (){
-			@Override
-			public void onClick(View v) {
-				SharedPreferences.Editor e = prefs.edit();
-				e.putString("CustomVoltages", getVoltages());
-				e.commit(); // this saves to disk and notifies observers
-			}
-    	});
-    	llbtn2.addView(btnSave);
-
-    	Button btnLoad = new Button(this);
-        params.gravity=Gravity.RIGHT;
-    	btnLoad.setLayoutParams(params);
-    	btnLoad.setText("Load");
-    	btnLoad.setOnClickListener(new OnClickListener (){
-			@Override
-			public void onClick(View v) {
-				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-				String volts = prefs.getString("CustomVoltages", null);
-				if (volts != null){
-					try {
-						setUiVoltages(volts);
+	    	});
+	    	llbtn.addView(btnUp);
+	    	
+	    	ll.addView(llbtn);
+	
+	    	LinearLayout llbtn2 = new LinearLayout(this);
+			llbtn2.setPadding(20, 20, 20, 20);
+			llbtn2.setOrientation(LinearLayout.HORIZONTAL);
+			llbtn2.setLayoutParams(new TableLayout.LayoutParams(
+					LayoutParams.MATCH_PARENT, 
+					LayoutParams.MATCH_PARENT, 
+					1f));
+	
+	    	Button btnApply = new Button(this);
+	        params.gravity=Gravity.LEFT;
+	    	btnApply.setLayoutParams(params);
+	    	btnApply.setText("Apply");
+	    	btnApply.setOnClickListener(new OnClickListener (){
+				@Override
+				public void onClick(View v) {
+	 				try {
+						vc.setVoltages(getUiVoltages());
+				    	appliedVoltages = vc.getVoltages();
+				    	updateUI();
+				    	
+						Toast.makeText(getApplicationContext(),
+								"Successfully set CPU voltages.", 
+				    			Toast.LENGTH_SHORT).show();
 					} catch (Exception e) {
+						Toast.makeText(getApplicationContext(),
+								"Error setting CPU voltages. " + e.getMessage(),
+						  		Toast.LENGTH_LONG).show();
+					}
+				}
+	    	});
+	    	llbtn2.addView(btnApply);
+	
+	    	Button btnSave = new Button(this);
+	        params.gravity=Gravity.CENTER;
+	    	btnSave.setLayoutParams(params);
+	    	btnSave.setText("Save");
+	    	btnSave.setOnClickListener(new OnClickListener (){
+				@Override
+				public void onClick(View v) {
+					SharedPreferences.Editor e = prefs.edit();
+					e.putString("CustomVoltages", getVoltages());
+					e.commit(); // this saves to disk and notifies observers
+				}
+	    	});
+	    	llbtn2.addView(btnSave);
+	
+	    	Button btnLoad = new Button(this);
+	        params.gravity=Gravity.RIGHT;
+	    	btnLoad.setLayoutParams(params);
+	    	btnLoad.setText("Load");
+	    	btnLoad.setOnClickListener(new OnClickListener (){
+				@Override
+				public void onClick(View v) {
+					SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+					String volts = prefs.getString("CustomVoltages", null);
+					if (volts != null){
+						try {
+							setUiVoltages(volts);
+						} catch (Exception e) {
+							Toast.makeText(getApplicationContext(),
+									"No settings saved.",
+							  		Toast.LENGTH_LONG).show();
+						}
+					} else {
 						Toast.makeText(getApplicationContext(),
 								"No settings saved.",
 						  		Toast.LENGTH_LONG).show();
 					}
-				} else {
-					Toast.makeText(getApplicationContext(),
-							"No settings saved.",
-					  		Toast.LENGTH_LONG).show();
+						
 				}
-					
-			}
-    	});
-    	llbtn2.addView(btnLoad);
-    	
-    	ll.addView(llbtn2);
+	    	});
+	    	llbtn2.addView(btnLoad);
 
-    	cbxBoot = new CheckBox(this);
-	    cbxBoot.setChecked(prefs.getBoolean("VoltagesApplyOnBoot", false));
-	    cbxBoot.setText("Apply custom voltages on boot");
-	    
-	    cbxBoot.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Boolean applyOnBoot = cbxBoot.isChecked();
-				
-				SharedPreferences.Editor e = prefs.edit();
-				e.putBoolean("VoltagesApplyOnBoot", applyOnBoot);
-				e.commit(); // this saves to disk and notifies observers
-			}
-		});		
-    	
-	    ll.addView(cbxBoot);
-    	
+	    	Button btnReset = new Button(this);
+	        params.gravity=Gravity.RIGHT;
+	        btnReset.setLayoutParams(params);
+	        btnReset.setText("Reset");
+	        btnReset.setOnClickListener(new OnClickListener (){
+				@Override
+				public void onClick(View v) {
+				    try {
+				    	appliedVoltages = vc.getVoltages(); 
+						setUiVoltages(appliedVoltages);
+					} catch (Exception e) {
+						Toast.makeText(getApplicationContext(),
+								"Error getting CPU voltages. " + e.getMessage(),
+						  		Toast.LENGTH_LONG).show();
+					}
+				}
+	    	});
+	    	llbtn2.addView(btnReset);
+	    	
+	    	
+	    	ll.addView(llbtn2);
+	
+	    	cbxBoot = new CheckBox(this);
+		    cbxBoot.setChecked(prefs.getBoolean("VoltagesApplyOnBoot", false));
+		    cbxBoot.setText("Apply custom voltages on boot");
+		    
+		    cbxBoot.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Boolean applyOnBoot = cbxBoot.isChecked();
+					
+					SharedPreferences.Editor e = prefs.edit();
+					e.putBoolean("VoltagesApplyOnBoot", applyOnBoot);
+					e.commit(); // this saves to disk and notifies observers
+				}
+			});		
+	    	
+		    ll.addView(cbxBoot);
+		}    	
     	this.setContentView(sv);
     }
     
