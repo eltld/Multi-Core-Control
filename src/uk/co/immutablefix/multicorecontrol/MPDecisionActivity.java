@@ -118,17 +118,20 @@ public class MPDecisionActivity extends Activity {
 			}
 		});		
         
+	    TextView tvUnsupported = (TextView)  findViewById(R.id.tvUnsupported);
+	    
         MPDecision mpd = new MPDecision();
         try {
 			sbMinCPUs.setProgress(mpd.getMinCPUs() - 1);
+			sbMaxCPUs.setProgress(mpd.getMaxCPUs() - 1);
+			tvUnsupported.setVisibility(TRIM_MEMORY_UI_HIDDEN);
 		} catch (Exception e) {
 			sbMinCPUs.setEnabled(false);
-		}
-
-        try {
-			sbMaxCPUs.setProgress(mpd.getMaxCPUs() - 1);
-		} catch (Exception e) {
 			sbMaxCPUs.setEnabled(false);
+
+			Toast.makeText(getApplicationContext(),
+					e.getMessage(),
+			  		Toast.LENGTH_LONG).show();
 		}
 	}
 	

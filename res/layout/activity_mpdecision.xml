@@ -93,6 +93,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/linearLayout4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/linearLayout3"
@@ -104,5 +105,16 @@
             android:layout_height="wrap_content"
             android:text="Apply setting on boot" />
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvUnsupported"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/linearLayout4"
+        android:layout_below="@+id/linearLayout4"
+        android:layout_marginTop="19dp"
+        android:text="Error: This kernel does not support MPD settings."
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="#FF0000" />
 
 </RelativeLayout>
