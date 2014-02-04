@@ -84,7 +84,7 @@ public class MPDecisionActivity extends Activity {
 			    			Toast.LENGTH_SHORT).show();
 				} catch (Exception e) {
 					Toast.makeText(getApplicationContext(),
-							"Error configuring MPD. " + e.getMessage(),
+							"Error configuring cores. " + e.getMessage(),
 					  		Toast.LENGTH_LONG).show();
 				}
 			}
@@ -136,7 +136,7 @@ public class MPDecisionActivity extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.menu, menu);
+		getMenuInflater().inflate(R.menu.mpdecision_menu, menu);
 		return true;
 	}
     
