@@ -80,7 +80,7 @@ public class MPDecisionActivity extends Activity {
  			        mpd.setMaxCPUs(sbMaxCPUs.getProgress() + 1);
 
  			        Toast.makeText(getApplicationContext(),
-							"Successfully configured MPD.", 
+							"Successfully configured cores.", 
 			    			Toast.LENGTH_SHORT).show();
 				} catch (Exception e) {
 					Toast.makeText(getApplicationContext(),
@@ -98,6 +98,10 @@ public class MPDecisionActivity extends Activity {
 				e.putInt("MinCPUs", sbMinCPUs.getProgress() + 1);
 				e.putInt("MaxCPUs", sbMaxCPUs.getProgress() + 1);
 				e.commit(); // this saves to disk and notifies observers
+
+				Toast.makeText(getApplicationContext(),
+						"Saved",
+				  		Toast.LENGTH_SHORT).show();
 			}
     	});        
 
