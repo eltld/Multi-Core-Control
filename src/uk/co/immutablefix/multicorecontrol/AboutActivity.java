@@ -12,16 +12,33 @@ import uk.co.immutablefix.multicorecontrol.R;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 import android.app.Activity;
 import android.content.Intent;
 
 public class AboutActivity extends Activity {
+	private long backPressed = 0;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_about);
 	}
 
+	// Press back twice to exit.
+	@Override
+	public void onBackPressed()
+	{
+		if (backPressed < java.lang.System.currentTimeMillis()) {
+			Toast.makeText(getApplicationContext(),
+					"Press back again to exit", 
+	    			Toast.LENGTH_SHORT).show();
+			backPressed = java.lang.System.currentTimeMillis() + 5000;
+		} else {
+			finish();
+		}
+	}
+	
     //Creates menus
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {

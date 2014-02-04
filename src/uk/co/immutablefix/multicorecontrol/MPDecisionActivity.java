@@ -19,6 +19,8 @@ import android.widget.TextView;
 import uk.co.immutablefix.multicorecontrol.R;
 
 public class MPDecisionActivity extends Activity {
+	private long backPressed = 0;
+
 	private SeekBar sbMaxCPUs = null;
 	private TextView tvMaxCPUs = null;
 	private SeekBar sbMinCPUs = null;
@@ -135,7 +137,21 @@ public class MPDecisionActivity extends Activity {
 		}
 	}
 	
-    //Creates menus
+	// Press back twice to exit.
+	@Override
+	public void onBackPressed()
+	{
+		if (backPressed < java.lang.System.currentTimeMillis()) {
+			Toast.makeText(getApplicationContext(),
+					"Press back again to exit", 
+	    			Toast.LENGTH_SHORT).show();
+			backPressed = java.lang.System.currentTimeMillis() + 5000;
+		} else {
+			finish();
+		}
+	}
+	
+	//Creates menus
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
