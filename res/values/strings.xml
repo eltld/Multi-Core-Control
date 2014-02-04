@@ -7,9 +7,12 @@
     <string name="quit_shortcut">Quit Short</string>
     <string name="about_label">About</string>
     <string name="about_shortcut">About Short</string>
-    <string name="mpdecision_label">CPU Settings</string>
+    <string name="voltagecontrol_lable">Voltage Control</string>
+    <string name="voltagecontrol_shortcut">Voltage Short</string>
+    <string name="title_activity_voltagecontrol">Voltage Control</string>
+    <string name="mpdecision_label">Multi Core Control</string>
     <string name="mpdecision_shortcut">MPDecision Short</string>
-    <string name="title_activity_mpdecision">CPU Settings</string>
+    <string name="title_activity_mpdecision">Multi Core Control</string>
     <string name="hello_world">Hello world!</string>
 
 </resources>

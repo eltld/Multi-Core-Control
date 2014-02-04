@@ -17,16 +17,10 @@
         android:label="@string/app_name"
         android:screenOrientation="portrait"
         android:theme="@style/AppTheme" >
-        <service android:name="uk.co.immutablefix.multicorecontrol.BackgroundService" />
 
         <activity
-            android:name="uk.co.immutablefix.multicorecontrol.MainActivity"
-            android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            android:name="uk.co.immutablefix.multicorecontrol.VoltageControlActivity"
+            android:label="@string/title_activity_voltagecontrol" >
         </activity>
         <activity
             android:name="uk.co.immutablefix.multicorecontrol.AboutActivity"
@@ -47,6 +41,10 @@
         <activity
             android:name="uk.co.immutablefix.multicorecontrol.MPDecisionActivity"
             android:label="@string/title_activity_mpdecision" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
     </application>
 
