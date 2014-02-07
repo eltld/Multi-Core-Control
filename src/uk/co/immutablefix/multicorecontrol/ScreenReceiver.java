@@ -20,7 +20,7 @@ public class ScreenReceiver extends BroadcastReceiver {
 		Runnable runnable = new Runnable() {
 			@Override
 			public void run() {
-				int time = 5000;
+				int time = 10000;
 				
 				try {
             		Thread.sleep(time);

@@ -2,12 +2,11 @@ package uk.co.immutablefix.multicorecontrol;
 
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.app.Activity;
-import android.content.Intent;
+import android.support.v4.app.Fragment;
 import android.content.SharedPreferences;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -18,9 +17,7 @@ import android.widget.TextView;
 
 import uk.co.immutablefix.multicorecontrol.R;
 
-public class MPDecisionActivity extends Activity {
-	private long backPressed = 0;
-
+public class MPDecisionFragment extends Fragment {
 	private SeekBar sbMaxCPUs = null;
 	private TextView tvMaxCPUs = null;
 	private SeekBar sbMinCPUs = null;
@@ -28,18 +25,24 @@ public class MPDecisionActivity extends Activity {
 	
 	SharedPreferences prefs;
 	CheckBox cbxBoot;
-	
+
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_mpdecision);
+	public void onActivityCreated(Bundle savedInstanceState) {
+	    super.onActivityCreated(savedInstanceState);
+	}
+	 
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState)
+	{
+		View view = inflater.inflate(R.layout.activity_mpdecision, container, false);
+			
+		prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getBaseContext());
 		
-		prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+		tvMinCPUs = (TextView) view.findViewById(R.id.tvMinCPUs);
+		tvMaxCPUs = (TextView) view.findViewById(R.id.tvMaxCPUs);
 		
-		tvMinCPUs = (TextView) findViewById(R.id.tvMinCPUs);
-		tvMaxCPUs = (TextView) findViewById(R.id.tvMaxCPUs);
-		
-        sbMinCPUs = (SeekBar) findViewById(R.id.sbMinCPUs);
+        sbMinCPUs = (SeekBar) view.findViewById(R.id.sbMinCPUs);
         sbMinCPUs.setMax(3);
         sbMinCPUs.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 			@Override
@@ -55,7 +58,7 @@ public class MPDecisionActivity extends Activity {
 			}
 		});	
 
-        sbMaxCPUs = (SeekBar) findViewById(R.id.sbMaxCPUs);
+        sbMaxCPUs = (SeekBar) view.findViewById(R.id.sbMaxCPUs);
         sbMaxCPUs.setMax(3);
         sbMaxCPUs.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 			@Override
@@ -71,7 +74,7 @@ public class MPDecisionActivity extends Activity {
 			}
 		});
         
-    	Button btnApply = (Button) findViewById(R.id.btnApply);
+    	Button btnApply = (Button) view.findViewById(R.id.btnApply);
         btnApply.setOnClickListener(new OnClickListener (){
 			@Override
 			public void onClick(View v) {
@@ -81,18 +84,18 @@ public class MPDecisionActivity extends Activity {
  			        mpd.setMinCPUs(sbMinCPUs.getProgress() + 1);
  			        mpd.setMaxCPUs(sbMaxCPUs.getProgress() + 1);
 
- 			        Toast.makeText(getApplicationContext(),
+ 			        Toast.makeText(getActivity().getApplicationContext(),
 							"Successfully configured cores.", 
 			    			Toast.LENGTH_SHORT).show();
 				} catch (Exception e) {
-					Toast.makeText(getApplicationContext(),
+					Toast.makeText(getActivity().getApplicationContext(),
 							"Error configuring cores. " + e.getMessage(),
 					  		Toast.LENGTH_LONG).show();
 				}
 			}
     	});        
         
-    	Button btnSave = (Button) findViewById(R.id.btnSave);
+    	Button btnSave = (Button) view.findViewById(R.id.btnSave);
     	btnSave.setOnClickListener(new OnClickListener (){
 			@Override
 			public void onClick(View v) {
@@ -101,13 +104,13 @@ public class MPDecisionActivity extends Activity {
 				e.putInt("MaxCPUs", sbMaxCPUs.getProgress() + 1);
 				e.commit(); // this saves to disk and notifies observers
 
-				Toast.makeText(getApplicationContext(),
+				Toast.makeText(getActivity().getApplicationContext(),
 						"Saved",
 				  		Toast.LENGTH_SHORT).show();
 			}
     	});        
 
-        cbxBoot = (CheckBox) findViewById(R.id.cbxBoot);
+        cbxBoot = (CheckBox) view.findViewById(R.id.cbxBoot);
 	    cbxBoot.setChecked(prefs.getBoolean("MPDApplyOnBoot", false));        
 	    cbxBoot.setOnClickListener(new OnClickListener() {
 			@Override
@@ -120,64 +123,22 @@ public class MPDecisionActivity extends Activity {
 			}
 		});		
         
-	    TextView tvUnsupported = (TextView)  findViewById(R.id.tvUnsupported);
+	    TextView tvUnsupported = (TextView) view.findViewById(R.id.tvUnsupported);
 	    
         MPDecision mpd = new MPDecision();
         try {
 			sbMinCPUs.setProgress(mpd.getMinCPUs() - 1);
 			sbMaxCPUs.setProgress(mpd.getMaxCPUs() - 1);
-			tvUnsupported.setVisibility(TRIM_MEMORY_UI_HIDDEN);
+			tvUnsupported.setVisibility(View.GONE);
 		} catch (Exception e) {
 			sbMinCPUs.setEnabled(false);
 			sbMaxCPUs.setEnabled(false);
 
-			Toast.makeText(getApplicationContext(),
+			Toast.makeText(getActivity().getApplicationContext(),
 					e.getMessage(),
 			  		Toast.LENGTH_LONG).show();
 		}
+
+        return view;
 	}
-	
-	// Press back twice to exit.
-	@Override
-	public void onBackPressed()
-	{
-		if (backPressed < java.lang.System.currentTimeMillis()) {
-			Toast.makeText(getApplicationContext(),
-					"Press back again to exit", 
-	    			Toast.LENGTH_SHORT).show();
-			backPressed = java.lang.System.currentTimeMillis() + 5000;
-		} else {
-			finish();
-		}
-	}
-	
-	//Creates menus
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.mpdecision_menu, menu);
-		return true;
-	}
-    
-    //Handles menu clicks
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-    	switch(item.getItemId()) {
-    	case R.id.mitmVoltageControl:
-    		Intent vc = new Intent(this, VoltageControlActivity.class);
-    		startActivity(vc);
-    		finish();
-    		return true;
-    	case R.id.mitmAbout:
-    		Intent about = new Intent(this, AboutActivity.class);
-    		startActivity(about);
-    		finish();
-    		return true;
-    	case R.id.mitmQuit:
-    		finish();
-    		break;
-    	}
-    	
-    	return false;
-    }  
 }

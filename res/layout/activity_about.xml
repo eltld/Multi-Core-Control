@@ -31,7 +31,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:lines="3"
-        android:text="Multi Core Control was developed by ImmutableFix."
+        android:text="Multi Core Control was developed by Immutablefix."
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
@@ -39,7 +39,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:lines="2"
-        android:text="Copyright ImmutableFix 2014"
+        android:text="Copyright Immutablefix 2014"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
