@@ -110,6 +110,10 @@ public class VoltageControlFragment extends Fragment {
 			  		Toast.LENGTH_LONG).show();
 		}
 		
+	    if (view == null) {
+	    	view = inflater.inflate(R.layout.voltage_control_unsupported, container, false);
+	    }
+	    
 	    return view;
 	}
 

@@ -35,7 +35,7 @@ public class MPDecisionFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState)
 	{
-		View view = inflater.inflate(R.layout.activity_mpdecision, container, false);
+		View view = inflater.inflate(R.layout.mpdecision, container, false);
 			
 		prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getBaseContext());
 		
@@ -123,20 +123,13 @@ public class MPDecisionFragment extends Fragment {
 			}
 		});		
         
-	    TextView tvUnsupported = (TextView) view.findViewById(R.id.tvUnsupported);
-	    
         MPDecision mpd = new MPDecision();
         try {
 			sbMinCPUs.setProgress(mpd.getMinCPUs() - 1);
 			sbMaxCPUs.setProgress(mpd.getMaxCPUs() - 1);
-			tvUnsupported.setVisibility(View.GONE);
 		} catch (Exception e) {
-			sbMinCPUs.setEnabled(false);
-			sbMaxCPUs.setEnabled(false);
-
-			Toast.makeText(getActivity().getApplicationContext(),
-					e.getMessage(),
-			  		Toast.LENGTH_LONG).show();
+			// Show unsupported message
+    		view = inflater.inflate(R.layout.mpdecision_unsupported, container, false);
 		}
 
         return view;
