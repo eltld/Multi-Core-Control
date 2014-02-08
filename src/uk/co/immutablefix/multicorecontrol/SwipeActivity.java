@@ -58,7 +58,7 @@ public class SwipeActivity extends FragmentActivity {
         
         ActionBar ab = getActionBar();
         ab.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        Tab tab1 = ab.newTab().setText("CPU Control")
+        Tab tab1 = ab.newTab().setText("MPD Control")
         		.setTabListener(new TabListener<MPDecisionFragment>(
                         this, "mpdecision", MPDecisionFragment.class));
 
