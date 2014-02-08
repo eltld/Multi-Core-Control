@@ -31,21 +31,24 @@ public class ColourControlFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState)
 	{
-		View view = inflater.inflate(R.layout.colour_control, container, false);
-		prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getBaseContext());
-
-		sbarRed = (SeekBar) view.findViewById(R.id.seekBarRed);
-		sbarGreen = (SeekBar) view.findViewById(R.id.seekBarGreen);
-		sbarBlue = (SeekBar) view.findViewById(R.id.seekBarBlue);
-
+		View view = null;
+		
 		ColourControl ctl = new ColourControl();
 		try {
 			appliedColours = ctl.getColours();
 		} catch (Exception e2) {
 			// TODO Auto-generated catch block
 			view = inflater.inflate(R.layout.colour_control_unsupported, container, false);
+			return view;
 		}
 
+		view = inflater.inflate(R.layout.colour_control, container, false);
+		prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getBaseContext());
+
+		sbarRed = (SeekBar) view.findViewById(R.id.seekBarRed);
+		sbarGreen = (SeekBar) view.findViewById(R.id.seekBarGreen);
+		sbarBlue = (SeekBar) view.findViewById(R.id.seekBarBlue);
+		
 		sbarRed.setProgress(appliedColours[0]);
 		sbarGreen.setProgress(appliedColours[1]);
 		sbarBlue.setProgress(appliedColours[2]);
