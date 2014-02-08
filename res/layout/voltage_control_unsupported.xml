@@ -15,7 +15,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="19dp"
-        android:text="Error: This kernel does not support voltage settings."
+        android:text="Error: This application can not use the current kernel to control voltage settings."
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="#FF0000" />
 
