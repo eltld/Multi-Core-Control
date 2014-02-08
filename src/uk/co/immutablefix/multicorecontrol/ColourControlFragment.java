@@ -60,12 +60,6 @@ public class ColourControlFragment extends Fragment {
 				green = sbarGreen.getProgress();
 				blue = sbarBlue.getProgress();
 
-				SharedPreferences.Editor e = prefs.edit();
-				e.putInt("RedMultiplier", red);
-				e.putInt("GreenMultiplier", green);
-				e.putInt("BlueMultiplier", blue);
-				e.commit(); // this saves to disk and notifies observers
-				
 				ColourControl ctl = new ColourControl();
 				try {
 					ctl.setColours(red, green, blue);
