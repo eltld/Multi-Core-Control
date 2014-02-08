@@ -76,5 +76,25 @@ public class ScreenReceiver extends BroadcastReceiver {
 				}
 			}
 		}
+		
+		if (prefs.getBoolean("ColourApplyOnBoot", false))
+		{
+			ColourControl ctl = new ColourControl();
+	
+			int red = prefs.getInt("RedMultiplier", 0);
+			int green = prefs.getInt("GreenMultiplier", 1);
+			int blue = prefs.getInt("BlueMultiplier", -1);
+			
+			try {
+				ctl.setColours(red, green, blue);
+				Toast.makeText(context,
+						"Successfully set colours.", 
+			    		Toast.LENGTH_SHORT).show();
+			} catch (Exception e) {
+				Toast.makeText(context,
+						"Error configuring colours. " + e.getMessage(),
+				  		Toast.LENGTH_LONG).show();
+			}
+		}
 	}
 }

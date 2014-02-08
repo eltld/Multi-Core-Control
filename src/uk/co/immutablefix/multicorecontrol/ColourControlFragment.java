@@ -10,13 +10,16 @@ import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
 public class ColourControlFragment extends Fragment {
-	SeekBar sbarRed, sbarGreen, sbarBlue;
-	SharedPreferences prefs;
+	SeekBar sbarRed, sbarGreen, sbarBlue = null;
+	CheckBox cbxBoot = null;
+	SharedPreferences prefs = null;
 	static int[] appliedColours = null;
 
 	@Override
@@ -46,12 +49,8 @@ public class ColourControlFragment extends Fragment {
 		sbarRed.setProgress(appliedColours[0]);
 		sbarGreen.setProgress(appliedColours[1]);
 		sbarBlue.setProgress(appliedColours[2]);
-/*		
-		sbarRed.setProgress(prefs.getInt("RedMultiplier", sbarRed.getMax()));
-		sbarGreen.setProgress(prefs.getInt("GreenMultiplier", sbarGreen.getMax()));
-		sbarBlue.setProgress(prefs.getInt("BlueMultiplier", sbarBlue.getMax()));
-*/
-	    Button btnApply = (Button) view.findViewById(R.id.buttonApply);
+
+		Button btnApply = (Button) view.findViewById(R.id.btnApply);
 	    btnApply.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -62,26 +61,37 @@ public class ColourControlFragment extends Fragment {
 				blue = sbarBlue.getProgress();
 
 				SharedPreferences.Editor e = prefs.edit();
-				e.putInt("redMultiplier", red);
-				e.putInt("greenMultiplier", green);
-				e.putInt("blueMultiplier", blue);
+				e.putInt("RedMultiplier", red);
+				e.putInt("GreenMultiplier", green);
+				e.putInt("BlueMultiplier", blue);
 				e.commit(); // this saves to disk and notifies observers
 				
-				int[] colours = new int[3];
-				colours[0] = red;
-				colours[1] = green;
-				colours[2] = blue;
-						
 				ColourControl ctl = new ColourControl();
 				try {
-					ctl.setColours(colours);
-				} catch (Exception e1) {
+					ctl.setColours(red, green, blue);
+ 			        Toast.makeText(getActivity().getApplicationContext(),
+							"Successfully set colours.", 
+			    			Toast.LENGTH_SHORT).show();
+ 			    } catch (Exception e1) {
 					Toast.makeText(getActivity().getApplicationContext(),
 							"Error setting colours. " + e1.getMessage(),
 					  		Toast.LENGTH_LONG).show();
 				}
 			}
 		});	
+
+	    cbxBoot = (CheckBox) view.findViewById(R.id.cbxBoot);
+	    cbxBoot.setChecked(prefs.getBoolean("ColourApplyOnBoot", false));        
+	    cbxBoot.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Boolean applyOnBoot = cbxBoot.isChecked();
+				
+				SharedPreferences.Editor e = prefs.edit();
+				e.putBoolean("ColourApplyOnBoot", applyOnBoot);
+				e.commit(); // this saves to disk and notifies observers
+			}
+		});		
 
 	    
 	    return view;

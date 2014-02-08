@@ -5,6 +5,8 @@ package uk.co.immutablefix.multicorecontrol;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
+import android.widget.Toast;
+
 import com.stericson.RootTools.RootTools;
 import com.stericson.RootTools.exceptions.RootDeniedException;
 import com.stericson.RootTools.execution.Command;
@@ -135,6 +137,16 @@ public class ColourControl {
 			
 		setColours(colours);
 	}
+	
+	public void setColours(int red, int green, int blue) throws Exception {
+		int[] colours = new int[3];
+		colours[0] = red;
+		colours[1] = green;
+		colours[2] = blue;
+				
+		setColours(colours);
+	}
+
 	
 	protected void commandWait(Command cmd) throws Exception {
         while (!cmd.isFinished()) {
