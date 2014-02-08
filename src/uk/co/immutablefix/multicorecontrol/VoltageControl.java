@@ -17,8 +17,9 @@ import com.stericson.RootTools.execution.CommandCapture;
 import com.stericson.RootTools.execution.Shell;
 
 public class VoltageControl {
-	static final int MIN_VOLTAGE = 700;
-	static final int MAX_VOLTAGE = 1400;	
+	final static int MIN_DEFAULT_VOLTAGE = 700;
+	static int MIN_VOLTAGE = 700;
+	static int MAX_VOLTAGE = 1400;	
 
     private String output;
     private int []frequencies = null;
@@ -36,7 +37,12 @@ public class VoltageControl {
 				{
 					if (table[i].endsWith("mV")){
 						table[i] = table[i].replaceAll("[:^A-Za-z]", ""); 
-						voltages[i/2] = Integer.parseInt(table[i]);				
+						voltages[i/2] = Integer.parseInt(table[i]);
+						if (MAX_VOLTAGE < voltages[i/2]) {
+							MAX_VOLTAGE = voltages[i/2];
+						} else if (MIN_VOLTAGE > voltages[i/2]) {
+							MIN_VOLTAGE = voltages[i/2];
+						}
 					}
 				}				
 			}

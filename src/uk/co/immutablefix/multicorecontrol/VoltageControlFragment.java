@@ -67,12 +67,33 @@ public class VoltageControlFragment extends Fragment {
 		View view = null;
 		prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getBaseContext());
 		vc = new VoltageControl();
-
+		int max, min;
+		
 	    try {
-			view = getVoltageUI(vc.getFrequencies());
+	    	appliedVoltages = vc.getVoltages();
+	    	
+	    	max = prefs.getInt("MaxVoltage", 0);
+	    	
+	    	if (max < VoltageControl.MAX_VOLTAGE){
+				SharedPreferences.Editor e = prefs.edit();
+				e.putInt("MaxVoltage", VoltageControl.MAX_VOLTAGE);
+				e.commit(); // this saves to disk and notifies observers
+	    	} else {
+	    		VoltageControl.MAX_VOLTAGE = max;
+	    	}
+
+	    	min = prefs.getInt("MinVoltage", 0);
+
+	    	if (prefs.getInt("MinVoltage", VoltageControl.MIN_DEFAULT_VOLTAGE) > VoltageControl.MIN_VOLTAGE){
+				SharedPreferences.Editor e = prefs.edit();
+				e.putInt("MinVoltage", VoltageControl.MIN_VOLTAGE);
+				e.commit(); // this saves to disk and notifies observers
+	    	} else {
+	    		VoltageControl.MIN_VOLTAGE = min;
+	    	}
 
 		    try {
-		    	appliedVoltages = vc.getVoltages(); 
+		    	view = getVoltageUI(vc.getFrequencies());
 				setUiVoltages(appliedVoltages);
 				if (savedUIVoltages != null)
 				{
@@ -80,88 +101,19 @@ public class VoltageControlFragment extends Fragment {
 				}
 			} catch (Exception e) {
 				Toast.makeText(getActivity().getApplicationContext(),
-						"Error getting CPU voltages. " + e.getMessage(),
+						"Error getting CPU frequencies. " + e.getMessage(),
 				  		Toast.LENGTH_LONG).show();
 			}
 	    } catch (Exception e) {
 			Toast.makeText(getActivity().getApplicationContext(),
-					"Error getting CPU frequencies. " + e.getMessage(),
+					"Error getting CPU voltages. " + e.getMessage(),
 			  		Toast.LENGTH_LONG).show();
 		}
 		
 	    return view;
 	}
-/*
-	// Press back twice to exit.
-    @Override
-    public void onDestroy(){
-    	super.onDestroy();
-    	
-    	if (sv != null)
-    	{
-	    	sv.removeAllViews();
-	    	if (isFinishing()) {
-	    		reloading = false;
-	    		sv = null;
-	    		ll = null;
-	    		tvVoltages = null;
-	    		sbVoltages = null;
-	    		imgPlus = null;
-	    		imgMinus = null;    		
-	    	}
-    	}
-    }	
 
-    @Override
-    public void onRestart(){
-    	super.onRestart();
-    }	
-
-    //Creates menus
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.voltage_control_menu, menu);
-		return true;
-	}
-    
-    //Handles menu clicks
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-    	switch(item.getItemId()) {
-    	case R.id.mitmMPDecision:
-    		Intent mpd = new Intent(this, MPDecisionActivity.class);
-    		startActivity(mpd);
-    		finish();
-    		return true;
-    	case R.id.mitmAbout:
-    		Intent about = new Intent(this, AboutActivity.class);
-    		startActivity(about);
-    		finish();
-    		return true;
-    	case R.id.mitmQuit:
-    		finish();
-    		break;
-    	}
-    	
-    	return false;
-    }  
-    
-	@Override
-	public void onBackPressed()
-	{
-		if (backPressed < java.lang.System.currentTimeMillis()) {
-			Toast.makeText(getApplicationContext(),
-					"Press back again to exit", 
-	    			Toast.LENGTH_SHORT).show();
-			backPressed = java.lang.System.currentTimeMillis() + 5000;
-		} else {
-			finish();
-		}
-	}
-*/    
-    
-    public View getVoltageUI(int freqs[]){
+	public View getVoltageUI(int freqs[]){
     		LinearLayout[] llSettings = new LinearLayout[freqs.length];
 	    	tvVoltages = new TextView[freqs.length];
 	    	TextView[] tvFrequencies = new TextView[freqs.length];
@@ -280,7 +232,7 @@ public class VoltageControlFragment extends Fragment {
 	    	Button btnDown5 = new Button(getActivity().getApplicationContext());
 	        params.gravity=Gravity.LEFT;
 	        btnDown5.setLayoutParams(params);
-	        btnDown5.setText("-5 mV");
+	        btnDown5.setText("-5mV");
 	        btnDown5.setOnClickListener(new OnClickListener (){
 				@Override
 				public void onClick(View v) {
@@ -295,7 +247,7 @@ public class VoltageControlFragment extends Fragment {
 	    	Button btnDown = new Button(getActivity().getApplicationContext());
 	        params.gravity=Gravity.LEFT;
 	        btnDown.setLayoutParams(params);
-	        btnDown.setText("-25 mV");
+	        btnDown.setText("-25mV");
 	        btnDown.setOnClickListener(new OnClickListener (){
 				@Override
 				public void onClick(View v) {
@@ -310,7 +262,7 @@ public class VoltageControlFragment extends Fragment {
 	    	Button btnUp5 = new Button(getActivity().getApplicationContext());
 	        params.gravity=Gravity.RIGHT;
 	        btnUp5.setLayoutParams(params);
-	        btnUp5.setText("+ 5 mV");
+	        btnUp5.setText("+5mV");
 	        btnUp5.setOnClickListener(new OnClickListener (){
 				@Override
 				public void onClick(View v) {
@@ -325,7 +277,7 @@ public class VoltageControlFragment extends Fragment {
 	    	Button btnUp = new Button(getActivity().getApplicationContext());
 	        params.gravity=Gravity.RIGHT;
 	        btnUp.setLayoutParams(params);
-	        btnUp.setText("+ 25 mV");
+	        btnUp.setText("+25mV");
 	        btnUp.setOnClickListener(new OnClickListener (){
 				@Override
 				public void onClick(View v) {
