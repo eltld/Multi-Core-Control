@@ -371,7 +371,6 @@ public class VoltageControlFragment extends Fragment {
 								"No settings saved.",
 						  		Toast.LENGTH_LONG).show();
 					}
-						
 				}
 	    	});
 	    	llbtn2.addView(btnLoad);

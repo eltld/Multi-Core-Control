@@ -80,6 +80,54 @@ public class ColourControlFragment extends Fragment {
 			}
 		});	
 
+		Button btnSave = (Button) view.findViewById(R.id.btnSave);
+	    btnSave.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				int red, green, blue;
+
+				red = sbarRed.getProgress();
+				green = sbarGreen.getProgress();
+				blue = sbarBlue.getProgress();
+
+				SharedPreferences.Editor e = prefs.edit();
+				e.putInt("RedMultiplier", red);
+				e.putInt("GreenMultiplier", green);
+				e.putInt("BlueMultiplier", blue);
+				e.commit(); // this saves to disk and notifies observers
+
+				Toast.makeText(getActivity().getApplicationContext(),
+						"Saved", 
+		    			Toast.LENGTH_SHORT).show();
+			}
+		});	
+
+		Button btnLoad = (Button) view.findViewById(R.id.btnLoad);
+		btnLoad.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				int red, green, blue;
+
+				red = prefs.getInt("RedMultiplier", -1);
+				green = prefs.getInt("GreenMultiplier", -1);
+				blue = prefs.getInt("BlueMultiplier", -1);
+				
+				if ((red >= 0) && (green >= 0) && (blue >= 0)) {
+					sbarRed.setProgress(red);
+					sbarGreen.setProgress(green);
+					sbarBlue.setProgress(blue);
+					
+					Toast.makeText(getActivity().getApplicationContext(),
+							"Loaded", 
+			    			Toast.LENGTH_SHORT).show();
+				} else {
+					Toast.makeText(getActivity().getApplicationContext(),
+							"No settings saved.",
+					  		Toast.LENGTH_LONG).show();
+				}				
+			}
+		});	
+	    
 	    cbxBoot = (CheckBox) view.findViewById(R.id.cbxBoot);
 	    cbxBoot.setChecked(prefs.getBoolean("ColourApplyOnBoot", false));        
 	    cbxBoot.setOnClickListener(new OnClickListener() {
