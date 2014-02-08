@@ -82,9 +82,9 @@ public class VoltageControlFragment extends Fragment {
 	    		VoltageControl.MAX_VOLTAGE = max;
 	    	}
 
-	    	min = prefs.getInt("MinVoltage", 0);
+	    	min = prefs.getInt("MinVoltage", VoltageControl.MIN_DEFAULT_VOLTAGE);
 
-	    	if (prefs.getInt("MinVoltage", VoltageControl.MIN_DEFAULT_VOLTAGE) > VoltageControl.MIN_VOLTAGE){
+	    	if (min > VoltageControl.MIN_VOLTAGE){
 				SharedPreferences.Editor e = prefs.edit();
 				e.putInt("MinVoltage", VoltageControl.MIN_VOLTAGE);
 				e.commit(); // this saves to disk and notifies observers
