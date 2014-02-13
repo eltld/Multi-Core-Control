@@ -33,11 +33,13 @@ public class SwipeActivity extends FragmentActivity {
         Fragment tabOneFragment = new MPDecisionFragment();
         Fragment tabTwoFragment = new VoltageControlFragment();
         Fragment tabThreeFragment = new ColourControlFragment();
+        Fragment tabFourFragment = new CpuFragment();
         
         PagerAdapter mPagerAdapter = new PagerAdapter(getSupportFragmentManager());
         mPagerAdapter.addFragment(tabOneFragment);
         mPagerAdapter.addFragment(tabTwoFragment);
         mPagerAdapter.addFragment(tabThreeFragment);
+        mPagerAdapter.addFragment(tabFourFragment);
         
         //transaction = getSupportFragmentManager().beginTransaction();
         
@@ -70,9 +72,14 @@ public class SwipeActivity extends FragmentActivity {
 				.setTabListener(new TabListener<ColourControlFragment>(
                         this, "colourcontrol", ColourControlFragment.class));
 
+		Tab tab4 = ab.newTab().setText("CPU Control")
+				.setTabListener(new TabListener<CpuFragment>(
+                        this, "cpucontrol", CpuFragment.class));
+		
 		ab.addTab(tab1);
 		ab.addTab(tab2);
 		ab.addTab(tab3);
+		ab.addTab(tab4);
     }
     
     public static class TabListener<T extends Fragment> implements ActionBar.TabListener {

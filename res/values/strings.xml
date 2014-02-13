@@ -14,5 +14,7 @@
     <string name="mpdecision_shortcut">MPDecision Short</string>
     <string name="title_activity_mpdecision">Multi Core Control</string>
     <string name="hello_world">Hello world!</string>
+    <string name="title_activity_cpu_fragment">CpuFragment</string>
+    <string name="title_activity_cpu_item_fragment">CpuItemFragment</string>
 
 </resources>
