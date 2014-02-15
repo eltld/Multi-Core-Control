@@ -15,7 +15,7 @@
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <ProgressBar
-        android:id="@+id/pbCPU"
+        android:id="@+id/pbCpuFrequency"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

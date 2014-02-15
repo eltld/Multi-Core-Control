@@ -7,7 +7,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 public class CpuFragment extends Fragment {
 	final static int CPU_TOTAL = 4;
@@ -15,10 +14,6 @@ public class CpuFragment extends Fragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 	    super.onActivityCreated(savedInstanceState);
-	    
-		for (int i=0; i < CPU_TOTAL; i++) {
-//			tvCpuLable[i].setText("CPU" + i + 1);
-		}
 	}
 	 
 	@Override
@@ -34,7 +29,7 @@ public class CpuFragment extends Fragment {
 			for (int i=0; i < CPU_TOTAL; i++) {
 				CpuItemFragment fragment = new CpuItemFragment();
 				Bundle bundle = new Bundle();
-				bundle.putInt("cpuId", i);
+				bundle.putInt("cpuNo", i);
 				fragment.setArguments(bundle);
 				fragmentTransaction.add(R.id.cpu_fragment, fragment);
 			}

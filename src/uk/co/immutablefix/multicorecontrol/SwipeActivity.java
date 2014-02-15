@@ -30,56 +30,59 @@ public class SwipeActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         
-        Fragment tabOneFragment = new MPDecisionFragment();
-        Fragment tabTwoFragment = new VoltageControlFragment();
-        Fragment tabThreeFragment = new ColourControlFragment();
-        Fragment tabFourFragment = new CpuFragment();
-        
-        PagerAdapter mPagerAdapter = new PagerAdapter(getSupportFragmentManager());
-        mPagerAdapter.addFragment(tabOneFragment);
-        mPagerAdapter.addFragment(tabTwoFragment);
-        mPagerAdapter.addFragment(tabThreeFragment);
-        mPagerAdapter.addFragment(tabFourFragment);
-        
-        //transaction = getSupportFragmentManager().beginTransaction();
-        
-        mViewPager = (ViewPager) findViewById(R.id.pager);
-		mViewPager.setAdapter(mPagerAdapter);
-		mViewPager.setOffscreenPageLimit(2);
-	    mViewPager.setCurrentItem(0);
-		
-		mViewPager.setOnPageChangeListener(
-	            new ViewPager.SimpleOnPageChangeListener() {
-	                @Override
-	                public void onPageSelected(int position) {
-	                    // When swiping between pages, select the
-	                    // corresponding tab.
-	                    getActionBar().setSelectedNavigationItem(position);
-	                }
-	            });
-        
-        ActionBar ab = getActionBar();
-        ab.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        Tab tab1 = ab.newTab().setText("MPD Control")
-        		.setTabListener(new TabListener<MPDecisionFragment>(
-                        this, "mpdecision", MPDecisionFragment.class));
+//        if (savedInstanceState == null) {
 
-		Tab tab2 = ab.newTab().setText("Voltage Control")
-				.setTabListener(new TabListener<VoltageControlFragment>(
-                        this, "voltagecontrol", VoltageControlFragment.class));
-		
-		Tab tab3 = ab.newTab().setText("Colour Control")
-				.setTabListener(new TabListener<ColourControlFragment>(
-                        this, "colourcontrol", ColourControlFragment.class));
-
-		Tab tab4 = ab.newTab().setText("CPU Control")
-				.setTabListener(new TabListener<CpuFragment>(
-                        this, "cpucontrol", CpuFragment.class));
-		
-		ab.addTab(tab1);
-		ab.addTab(tab2);
-		ab.addTab(tab3);
-		ab.addTab(tab4);
+            Fragment tabOneFragment = new MPDecisionFragment();
+	        Fragment tabTwoFragment = new VoltageControlFragment();
+	        Fragment tabThreeFragment = new ColourControlFragment();
+	        Fragment tabFourFragment = new CpuFragment();
+	        
+	        PagerAdapter mPagerAdapter = new PagerAdapter(getSupportFragmentManager());
+	        mPagerAdapter.addFragment(tabOneFragment);
+	        mPagerAdapter.addFragment(tabTwoFragment);
+	        mPagerAdapter.addFragment(tabThreeFragment);
+	        mPagerAdapter.addFragment(tabFourFragment);
+	        
+	        //transaction = getSupportFragmentManager().beginTransaction();
+	        
+	        mViewPager = (ViewPager) findViewById(R.id.pager);
+			mViewPager.setAdapter(mPagerAdapter);
+			mViewPager.setOffscreenPageLimit(4);
+		    mViewPager.setCurrentItem(0);
+			
+			mViewPager.setOnPageChangeListener(
+		            new ViewPager.SimpleOnPageChangeListener() {
+		                @Override
+		                public void onPageSelected(int position) {
+		                    // When swiping between pages, select the
+		                    // corresponding tab.
+		                    getActionBar().setSelectedNavigationItem(position);
+		                }
+		            });
+	        
+	        ActionBar ab = getActionBar();
+	        ab.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+	        Tab tab1 = ab.newTab().setText("MPD Control")
+	        		.setTabListener(new TabListener<MPDecisionFragment>(
+	                        this, "mpdecision", MPDecisionFragment.class));
+	
+			Tab tab2 = ab.newTab().setText("Voltage Control")
+					.setTabListener(new TabListener<VoltageControlFragment>(
+	                        this, "voltagecontrol", VoltageControlFragment.class));
+			
+			Tab tab3 = ab.newTab().setText("Colour Control")
+					.setTabListener(new TabListener<ColourControlFragment>(
+	                        this, "colourcontrol", ColourControlFragment.class));
+	
+			Tab tab4 = ab.newTab().setText("CPU Control")
+					.setTabListener(new TabListener<CpuFragment>(
+	                        this, "cpucontrol", CpuFragment.class));
+			
+			ab.addTab(tab1);
+			ab.addTab(tab2);
+			ab.addTab(tab3);
+			ab.addTab(tab4);
+//        }
     }
     
     public static class TabListener<T extends Fragment> implements ActionBar.TabListener {
