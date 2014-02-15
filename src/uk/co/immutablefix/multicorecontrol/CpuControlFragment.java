@@ -115,11 +115,11 @@ public class CpuControlFragment extends Fragment {
 						new CpuControl().SetScalingFrequencies(cpuTotal,frequencies[sbGovMin.getProgress()], frequencies[sbGovMax.getProgress()]);
 
 	 			        Toast.makeText(getActivity().getApplicationContext(),
-								"Successfully configured govenor.", 
+								"Successfully configured governor.", 
 				    			Toast.LENGTH_SHORT).show();
 					} catch (Exception e) {
 						Toast.makeText(getActivity().getApplicationContext(),
-								"Error configuring govenor. " + e.getMessage(),
+								"Error configuring governor. " + e.getMessage(),
 						  		Toast.LENGTH_LONG).show();
 					}
 				}

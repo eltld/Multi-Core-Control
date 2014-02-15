@@ -34,7 +34,8 @@
         android:id="@+id/govLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        android:paddingTop="5dp" >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -44,8 +45,9 @@
                 android:id="@+id/textView3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="CPU Govenor"
+                android:text="CPU Governor"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
+
         </LinearLayout>
 
         <LinearLayout
@@ -106,7 +108,8 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp" >
 
             <Button
                 android:id="@+id/btnApply"
