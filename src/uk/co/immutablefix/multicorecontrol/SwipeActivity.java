@@ -32,10 +32,10 @@ public class SwipeActivity extends FragmentActivity {
         
 //        if (savedInstanceState == null) {
 
-            Fragment tabOneFragment = new MPDecisionFragment();
+            Fragment tabOneFragment = new CpuFragment();
 	        Fragment tabTwoFragment = new VoltageControlFragment();
-	        Fragment tabThreeFragment = new ColourControlFragment();
-	        Fragment tabFourFragment = new CpuFragment();
+	        Fragment tabThreeFragment = new MPDecisionFragment();
+	        Fragment tabFourFragment = new ColourControlFragment();
 	        
 	        PagerAdapter mPagerAdapter = new PagerAdapter(getSupportFragmentManager());
 	        mPagerAdapter.addFragment(tabOneFragment);
@@ -62,22 +62,23 @@ public class SwipeActivity extends FragmentActivity {
 	        
 	        ActionBar ab = getActionBar();
 	        ab.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-	        Tab tab1 = ab.newTab().setText("MPD Control")
-	        		.setTabListener(new TabListener<MPDecisionFragment>(
-	                        this, "mpdecision", MPDecisionFragment.class));
-	
+
+			Tab tab1 = ab.newTab().setText("CPU Control")
+					.setTabListener(new TabListener<CpuFragment>(
+	                        this, "cpucontrol", CpuFragment.class));
+
 			Tab tab2 = ab.newTab().setText("Voltage Control")
 					.setTabListener(new TabListener<VoltageControlFragment>(
 	                        this, "voltagecontrol", VoltageControlFragment.class));
-			
-			Tab tab3 = ab.newTab().setText("Colour Control")
+
+			Tab tab3 = ab.newTab().setText("MPD Control")
+	        		.setTabListener(new TabListener<MPDecisionFragment>(
+	                        this, "mpdecision", MPDecisionFragment.class));
+	
+			Tab tab4 = ab.newTab().setText("Colour Control")
 					.setTabListener(new TabListener<ColourControlFragment>(
 	                        this, "colourcontrol", ColourControlFragment.class));
 	
-			Tab tab4 = ab.newTab().setText("CPU Control")
-					.setTabListener(new TabListener<CpuFragment>(
-	                        this, "cpucontrol", CpuFragment.class));
-			
 			ab.addTab(tab1);
 			ab.addTab(tab2);
 			ab.addTab(tab3);
