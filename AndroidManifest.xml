@@ -42,7 +42,7 @@
         </receiver>
 
         <activity
-            android:name="uk.co.immutablefix.multicorecontrol.CpuFragment"
+            android:name="uk.co.immutablefix.multicorecontrol.CpuControlFragment"
             android:label="@string/title_activity_cpu_fragment" >
         </activity>
         <activity

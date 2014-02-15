@@ -37,5 +37,4 @@ public class MPDecision extends SysfsInterface {
 		
 		setSetting(path, String.valueOf(cpus));
 	}
-
 }

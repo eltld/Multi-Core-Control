@@ -83,7 +83,7 @@ public class VoltageControl {
 					{
 						if (table[i].endsWith("mhz")){
 							table[i] = table[i].replaceAll("[:^A-Za-z]", ""); 
-							frequencies[i/2] = Integer.parseInt(table[i]);				
+							frequencies[i/2] = Integer.parseInt(table[i]) * 1000;				
 						}
 					}				
 					
@@ -101,7 +101,7 @@ public class VoltageControl {
 					if (i%2 == 0) 
 					{
 						if (table[i].endsWith("000")){
-							frequencies[i/2] = Integer.parseInt(table[i])/1000;				
+							frequencies[i/2] = Integer.parseInt(table[i]);				
 						}
 					}				
 					
@@ -216,7 +216,7 @@ public class VoltageControl {
 
 				for(int i=0; i<voltages.length; i++)
 				{
-					commands[i] = new CommandCapture(0,	"echo " + freqs[i] * 1000 + " " 
+					commands[i] = new CommandCapture(0,	"echo " + freqs[i]  + " " 
 							+ voltages[i] * 1000 + " > " + tablePath);
 					shell.add(commands[i]);
 					commandWait(commands[i]);

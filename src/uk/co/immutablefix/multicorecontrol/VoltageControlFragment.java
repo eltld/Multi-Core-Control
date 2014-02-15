@@ -153,7 +153,7 @@ public class VoltageControlFragment extends Fragment {
     		
 	    		// Add frequency textview
 	    		tvFrequencies[i] = new TextView(getActivity().getApplicationContext());
-	    		tvFrequencies[i].setText(freqs[i] + " MHz");
+	    		tvFrequencies[i].setText(freqs[i] / 1000 + " MHz");
 	    		tvFrequencies[i].setLayoutParams(params);
 			
 	    		llSettings[i].addView(tvFrequencies[i]);

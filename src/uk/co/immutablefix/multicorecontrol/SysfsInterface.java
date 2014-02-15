@@ -3,6 +3,8 @@ package uk.co.immutablefix.multicorecontrol;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
+import android.util.Log;
+
 import com.stericson.RootTools.RootTools;
 import com.stericson.RootTools.exceptions.RootDeniedException;
 import com.stericson.RootTools.execution.Command;
@@ -12,7 +14,7 @@ import com.stericson.RootTools.execution.Shell;
 public class SysfsInterface {
     private String output;
 
-	public String getSetting(String path) throws Exception {
+	public synchronized String getSetting(String path) throws Exception {
 		output = "";
 		
 		if (!RootTools.exists(path)) {
@@ -54,7 +56,7 @@ public class SysfsInterface {
 		return output;
 	}
 
-	public void setSetting(String path, String value) throws Exception {
+	public synchronized void setSetting(String path, String value) throws Exception {
 		if (!RootTools.exists(path)) {
 			throw new Exception("Error: Kernel does not support setting.");
 		}
@@ -83,13 +85,28 @@ public class SysfsInterface {
 			throw new Exception("Error setting Sysfs value, general exception.");
 		}
 	}
+
+	public void setSettingForce(String path, String value) throws Exception {
+		Shell shell = RootTools.getShell(true);
+		
+		CommandCapture command = new CommandCapture(0, "chmod 777 " + path);
+		shell.add(command);
+		commandWait(command);
+
+		try {
+			CommandCapture command2 = new CommandCapture(0, "echo " + value + " > " + path);
+			shell.add(command2);
+			commandWait(command2);
+		} catch (Exception e) {
+		}
+	}
 	
 	protected void commandWait(Command cmd) throws Exception {
         while (!cmd.isFinished()) {
             synchronized (cmd) {
                 try {
                     if (!cmd.isFinished()) {
-                        cmd.wait(100);
+                        cmd.wait(50);
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();

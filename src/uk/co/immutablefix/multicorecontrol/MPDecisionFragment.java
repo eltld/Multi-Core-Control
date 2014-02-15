@@ -22,6 +22,7 @@ public class MPDecisionFragment extends Fragment {
 	private TextView tvMaxCPUs = null;
 	private SeekBar sbMinCPUs = null;
 	private TextView tvMinCPUs = null;
+	int cpuTotal = 1;
 	
 	SharedPreferences prefs;
 	CheckBox cbxBoot;
@@ -41,9 +42,11 @@ public class MPDecisionFragment extends Fragment {
 		
 		tvMinCPUs = (TextView) view.findViewById(R.id.tvMinCPUs);
 		tvMaxCPUs = (TextView) view.findViewById(R.id.tvMaxCPUs);
-		
+
+        cpuTotal = new CpuControl().getCpusPresent();
+        
         sbMinCPUs = (SeekBar) view.findViewById(R.id.sbMinCPUs);
-        sbMinCPUs.setMax(3);
+        sbMinCPUs.setMax(cpuTotal-1);
         sbMinCPUs.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 			@Override
 			public void onProgressChanged(SeekBar seekBar, int progress,
@@ -59,7 +62,7 @@ public class MPDecisionFragment extends Fragment {
 		});	
 
         sbMaxCPUs = (SeekBar) view.findViewById(R.id.sbMaxCPUs);
-        sbMaxCPUs.setMax(3);
+        sbMaxCPUs.setMax(cpuTotal-1);
         sbMaxCPUs.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 			@Override
 			public void onProgressChanged(SeekBar seekBar, int progress,

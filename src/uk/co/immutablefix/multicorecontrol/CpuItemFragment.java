@@ -77,7 +77,7 @@ public class CpuItemFragment extends Fragment {
 									tvCpuFrequency.setText("off");
 									pbCpuFrequency.setProgress(0);
 								} else {
-									tvCpuFrequency.setText(String.valueOf(freq) + "MHz");
+									tvCpuFrequency.setText(String.valueOf(freq/1000) + "MHz");
 									pbCpuFrequency.setProgress((freq * 100)/maxFrequency);
 								}
 								

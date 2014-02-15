@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
+import uk.co.immutablefix.multicorecontrol.CpuControlFragment;
 
 public class ScreenReceiver extends BroadcastReceiver {
 	@Override
@@ -94,6 +95,27 @@ public class ScreenReceiver extends BroadcastReceiver {
 				Toast.makeText(context,
 						"Error configuring colours. " + e.getMessage(),
 				  		Toast.LENGTH_LONG).show();
+			}
+		}
+
+		if (prefs.getBoolean("CPUApplyOnBoot", false))
+		{
+			CpuControl cpu = new CpuControl();
+	
+			int min = prefs.getInt("GovMin", 0);
+			int max = prefs.getInt("GovMax", 0);
+			
+			if ((min > 0) && (max > 0)) {
+				try {
+					cpu.SetScalingFrequencies(cpu.getCpusPresent(), min, max);
+					Toast.makeText(context,
+							"Successfully set governor frequencies.", 
+				    		Toast.LENGTH_SHORT).show();
+				} catch (Exception e) {
+					Toast.makeText(context,
+							"Error configuring governor frequencies. " + e.getMessage(),
+					  		Toast.LENGTH_LONG).show();
+				}
 			}
 		}
 	}
