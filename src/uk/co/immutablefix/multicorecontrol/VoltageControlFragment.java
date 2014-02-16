@@ -50,6 +50,18 @@ public class VoltageControlFragment extends Fragment {
 	CheckBox cbxBoot;
 	SharedPreferences prefs;
 
+	public boolean getSupported(){
+		boolean supported = true;
+		
+        vc = new VoltageControl();
+        try {
+			vc.getFrequencies();
+		} catch (Exception e) {
+			supported = false;
+		}
+		return supported;
+	}
+
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 	    super.onActivityCreated(savedInstanceState);
@@ -339,6 +351,9 @@ public class VoltageControlFragment extends Fragment {
 					e.putString("CustomVoltages", getVoltages());
 					e.commit(); // this saves to disk and notifies observers
 
+					// Enable apply on boot check box if needed.
+					if (!cbxBoot.isEnabled()) cbxBoot.setEnabled(true);
+
 					Toast.makeText(getActivity().getApplicationContext(),
 							"Saved",
 					  		Toast.LENGTH_SHORT).show();
@@ -405,7 +420,8 @@ public class VoltageControlFragment extends Fragment {
 	    	cbxBoot = new CheckBox(getActivity().getApplicationContext());
 		    cbxBoot.setChecked(prefs.getBoolean("VoltagesApplyOnBoot", false));
 		    cbxBoot.setText("Apply custom voltages on boot");
-		    
+		    // Test if there are settings to apply on boot. If not disable the check box.
+			cbxBoot.setEnabled(prefs.getString("CustomVoltages", null) != null);
 		    cbxBoot.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {

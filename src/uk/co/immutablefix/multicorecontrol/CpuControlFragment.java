@@ -134,6 +134,9 @@ public class CpuControlFragment extends Fragment {
 					e.putInt("GovMax", frequencies[sbGovMax.getProgress()]);
 					e.commit(); // this saves to disk and notifies observers
 
+					// Enable apply on boot check box if needed.
+					if (!cbxBoot.isEnabled()) cbxBoot.setEnabled(true);
+
 					Toast.makeText(getActivity().getApplicationContext(),
 							"Saved",
 					  		Toast.LENGTH_SHORT).show();
@@ -142,6 +145,8 @@ public class CpuControlFragment extends Fragment {
 
 	        cbxBoot = (CheckBox) view.findViewById(R.id.cbxBoot);
 		    cbxBoot.setChecked(prefs.getBoolean("CPUApplyOnBoot", false));        
+		    // Test if there are settings to apply on boot. If not disable the check box.
+			cbxBoot.setEnabled(prefs.getInt("GovMin", 0) > 0);
 		    cbxBoot.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {

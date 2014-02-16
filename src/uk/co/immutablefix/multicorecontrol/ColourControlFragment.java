@@ -21,6 +21,18 @@ public class ColourControlFragment extends Fragment {
 	CheckBox cbxBoot = null;
 	SharedPreferences prefs = null;
 	static int[] appliedColours = null;
+	
+	public boolean getSupported(){
+		boolean supported = true;
+		
+		ColourControl ctl = new ColourControl();
+		try {
+			ctl.getColours();
+		} catch (Exception e2) {
+			supported = false;
+		}
+		return supported;
+	}
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -37,7 +49,6 @@ public class ColourControlFragment extends Fragment {
 		try {
 			appliedColours = ctl.getColours();
 		} catch (Exception e2) {
-			// TODO Auto-generated catch block
 			view = inflater.inflate(R.layout.colour_control_unsupported, container, false);
 			return view;
 		}
@@ -93,6 +104,9 @@ public class ColourControlFragment extends Fragment {
 				e.putInt("BlueMultiplier", blue);
 				e.commit(); // this saves to disk and notifies observers
 
+				// Enable apply on boot check box if needed.
+				if (!cbxBoot.isEnabled()) cbxBoot.setEnabled(true);
+
 				Toast.makeText(getActivity().getApplicationContext(),
 						"Saved", 
 		    			Toast.LENGTH_SHORT).show();
@@ -127,6 +141,8 @@ public class ColourControlFragment extends Fragment {
 	    
 	    cbxBoot = (CheckBox) view.findViewById(R.id.cbxBoot);
 	    cbxBoot.setChecked(prefs.getBoolean("ColourApplyOnBoot", false));        
+		// Test if there are settings to apply on boot. If disable not the check box.
+	    cbxBoot.setEnabled((prefs.getInt("RedMultiplier", -1) > -1));
 	    cbxBoot.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
