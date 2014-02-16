@@ -42,7 +42,7 @@ public class SwipeActivity extends FragmentActivity {
         
         mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setAdapter(mPagerAdapter);
-		mViewPager.setOffscreenPageLimit(2);
+		mViewPager.setOffscreenPageLimit(4);
 	    mViewPager.setCurrentItem(0);
 		
 		mViewPager.setOnPageChangeListener(
