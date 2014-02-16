@@ -19,7 +19,6 @@ import android.widget.Toast;
 
 public class SwipeActivity extends FragmentActivity {
 	
-	FragmentTransaction transaction;
 	static ViewPager mViewPager;
 	
 	static long backPressed = 0;
@@ -41,11 +40,9 @@ public class SwipeActivity extends FragmentActivity {
         mPagerAdapter.addFragment(tabThreeFragment);
         mPagerAdapter.addFragment(tabFourFragment);
         
-        //transaction = getSupportFragmentManager().beginTransaction();
-        
         mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setAdapter(mPagerAdapter);
-		mViewPager.setOffscreenPageLimit(4);
+		mViewPager.setOffscreenPageLimit(2);
 	    mViewPager.setCurrentItem(0);
 		
 		mViewPager.setOnPageChangeListener(
@@ -81,7 +78,7 @@ public class SwipeActivity extends FragmentActivity {
 		ab.addTab(tab2);
 		ab.addTab(tab3);
 		ab.addTab(tab4);
-    }
+  }
     
     public static class TabListener<T extends Fragment> implements ActionBar.TabListener {
         private Fragment mFragment;

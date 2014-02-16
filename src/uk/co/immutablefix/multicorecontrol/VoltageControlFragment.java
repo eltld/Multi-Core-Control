@@ -30,6 +30,7 @@ import android.widget.TextView;
 
 public class VoltageControlFragment extends Fragment {
 	static private int[] savedUIVoltages = null;
+	private boolean uiActive = false;
 
 	TextView[] tvVoltages = null;
 	TextView[] tvFrequencies = null;
@@ -56,7 +57,7 @@ public class VoltageControlFragment extends Fragment {
 
 	@Override
 	public void onDestroyView () {
-		savedUIVoltages = getUiVoltages();
+		if (uiActive) savedUIVoltages = getUiVoltages();
 	    super.onDestroyView();
 	}
 	
@@ -105,13 +106,13 @@ public class VoltageControlFragment extends Fragment {
 				  		Toast.LENGTH_LONG).show();
 			}
 	    } catch (Exception e) {
-			Toast.makeText(getActivity().getApplicationContext(),
-					"Error getting CPU voltages. " + e.getMessage(),
-			  		Toast.LENGTH_LONG).show();
 		}
 		
 	    if (view == null) {
+	        uiActive = false;
 	    	view = inflater.inflate(R.layout.voltage_control_unsupported, container, false);
+	    } else {
+	        uiActive = true;
 	    }
 	    
 	    return view;

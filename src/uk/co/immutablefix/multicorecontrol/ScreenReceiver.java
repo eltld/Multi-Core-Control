@@ -36,6 +36,8 @@ public class ScreenReceiver extends BroadcastReceiver {
 		runnable.run();
 
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+		SharedPreferences.Editor prefEdit = prefs.edit();
+
 		if (prefs.getBoolean("VoltagesApplyOnBoot", false))
 		{
 			VoltageControl vc = new VoltageControl();
@@ -49,6 +51,9 @@ public class ScreenReceiver extends BroadcastReceiver {
 							"Successfully set CPU voltages.", 
 			    			Toast.LENGTH_SHORT).show();
 				} catch (Exception e) {
+					prefEdit.putBoolean("VoltagesApplyOnBoot", false);
+					prefEdit.commit(); // this saves to disk and notifies observers
+
 					Toast.makeText(context,
 							"Error setting CPU voltages. " + e.getMessage(),
 					  		Toast.LENGTH_LONG).show();
@@ -71,6 +76,9 @@ public class ScreenReceiver extends BroadcastReceiver {
 								"Successfully configured MPD.", 
 				    			Toast.LENGTH_SHORT).show();
 				} catch (Exception e) {
+					prefEdit.putBoolean("MPDApplyOnBoot", false);
+					prefEdit.commit(); // this saves to disk and notifies observers
+					
 					Toast.makeText(context,
 							"Error configuring MPD. " + e.getMessage(),
 					  		Toast.LENGTH_LONG).show();
@@ -92,6 +100,9 @@ public class ScreenReceiver extends BroadcastReceiver {
 						"Successfully set colours.", 
 			    		Toast.LENGTH_SHORT).show();
 			} catch (Exception e) {
+				prefEdit.putBoolean("ColourApplyOnBoot", false);
+				prefEdit.commit(); // this saves to disk and notifies observers
+
 				Toast.makeText(context,
 						"Error configuring colours. " + e.getMessage(),
 				  		Toast.LENGTH_LONG).show();
@@ -112,6 +123,9 @@ public class ScreenReceiver extends BroadcastReceiver {
 							"Successfully set governor frequencies.", 
 				    		Toast.LENGTH_SHORT).show();
 				} catch (Exception e) {
+					prefEdit.putBoolean("CPUApplyOnBoot", false);
+					prefEdit.commit(); // this saves to disk and notifies observers
+					
 					Toast.makeText(context,
 							"Error configuring governor frequencies. " + e.getMessage(),
 					  		Toast.LENGTH_LONG).show();
