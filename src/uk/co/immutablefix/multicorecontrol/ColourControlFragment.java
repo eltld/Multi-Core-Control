@@ -22,16 +22,8 @@ public class ColourControlFragment extends Fragment {
 	SharedPreferences prefs = null;
 	static int[] appliedColours = null;
 	
-	public boolean getSupported(){
-		boolean supported = true;
-		
-		ColourControl ctl = new ColourControl();
-		try {
-			ctl.getColours();
-		} catch (Exception e2) {
-			supported = false;
-		}
-		return supported;
+	public boolean isSupported(){
+		return new ColourControl().isSupported();
 	}
 
 	@Override

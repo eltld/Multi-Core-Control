@@ -3,7 +3,7 @@ package uk.co.immutablefix.multicorecontrol;
 import com.stericson.RootTools.RootTools;
 
 public class CpuControl extends SysfsInterface{
-	
+
 	public int getCpusPresent() {
 		String path = "/sys/devices/system/cpu/present";
 		int cpuTotal = 1;

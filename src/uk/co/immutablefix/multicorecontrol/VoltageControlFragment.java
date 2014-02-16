@@ -50,16 +50,8 @@ public class VoltageControlFragment extends Fragment {
 	CheckBox cbxBoot;
 	SharedPreferences prefs;
 
-	public boolean getSupported(){
-		boolean supported = true;
-		
-        vc = new VoltageControl();
-        try {
-			vc.getFrequencies();
-		} catch (Exception e) {
-			supported = false;
-		}
-		return supported;
+	public boolean isSupported(){
+        return new VoltageControl().isSupported();
 	}
 
 	@Override

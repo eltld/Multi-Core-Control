@@ -34,9 +34,10 @@ public class SwipeActivity extends FragmentActivity {
         Fragment tabThreeFragment = new MPDecisionFragment();
         Fragment tabFourFragment = new ColourControlFragment();
 
-		if (!((VoltageControlFragment) tabTwoFragment).getSupported()) tabTwoFragment = null;
-		if (!((MPDecisionFragment) tabThreeFragment).getSupported()) tabThreeFragment = null;
-		if (!((ColourControlFragment) tabFourFragment).getSupported()) tabFourFragment = null;
+        // Remove unsupported tabs.
+        if (!((VoltageControlFragment) tabTwoFragment).isSupported()) tabTwoFragment = null;
+		if (!((MPDecisionFragment) tabThreeFragment).isSupported()) tabThreeFragment = null;
+		if (!((ColourControlFragment) tabFourFragment).isSupported()) tabFourFragment = null;
         
         PagerAdapter mPagerAdapter = new PagerAdapter(getSupportFragmentManager());
         mPagerAdapter.addFragment(tabOneFragment);

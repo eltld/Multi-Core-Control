@@ -13,24 +13,27 @@ import com.stericson.RootTools.execution.Command;
 import com.stericson.RootTools.execution.CommandCapture;
 import com.stericson.RootTools.execution.Shell;
 
-public class ColourControl {
+public class ColourControl extends SysfsInterface {
     private String output;
+    final String colourPath = "/sys/class/misc/colorcontrol/multiplier";
     
-    public int[] getColours() throws Exception {
+	public boolean isSupported() {
+		return (RootTools.exists(colourPath)); 
+	}
+
+	public int[] getColours() throws Exception {
+		Shell shell = RootTools.getShell(true);
     	String[] strColours = null;
 		output = "";
 		String settingsPath = "";
 			
-		if (RootTools.exists("/sys/class/misc/colorcontrol/multiplier")) {
-			settingsPath = "/sys/class/misc/colorcontrol/multiplier";
+		if (RootTools.exists(colourPath)) {
+			settingsPath = colourPath;
 		} else {
 			throw new Exception("Failed to find colour settings, unsupported kernel.");
 		}
 			
-		CommandCapture command = new CommandCapture(0, 
-				"chmod 777 " + settingsPath);
-
-		Command command2 = new Command(0, "cat " + settingsPath)
+		Command command = new Command(0, "cat " + settingsPath)
 		{
 		        @Override
 		        public void output(int id, String line)
@@ -45,10 +48,10 @@ public class ColourControl {
 				public void commandTerminated(int arg0, String arg1) {}
 		};
 		
-		RootTools.getShell(true).add(command);
+		setFilePermissions(shell, "777", settingsPath);
+		shell.add(command);
 		commandWait(command);
-		RootTools.getShell(true).add(command2);
-		commandWait(command2);
+		setFilePermissions(shell, "444", settingsPath);
 
 		// Parse colour values;
 		output = output.replaceAll("[:]", " ");
@@ -85,15 +88,8 @@ public class ColourControl {
 			}
 		}
 		
-		if (RootTools.exists("/sys/class/misc/colorcontrol/multiplier")) {
-			settingsPath = "/sys/class/misc/colorcontrol/multiplier";
-/*
-			// Scale settings.
-			for(int i=0; i<colours.length; i++)
-			{
-				colours[i] = colours[i]/1000 * 2000000000;
-			}
-*/			
+		if (RootTools.exists(colourPath)) {
+			settingsPath = colourPath;
 		} else {
 			throw new Exception("Failed to find colour settings, unsupported kernel.");
 		}
@@ -146,20 +142,4 @@ public class ColourControl {
 				
 		setColours(colours);
 	}
-
-	
-	protected void commandWait(Command cmd) throws Exception {
-        while (!cmd.isFinished()) {
-            synchronized (cmd) {
-                try {
-                    if (!cmd.isFinished()) {
-                        cmd.wait(100);
-                    }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-	
 }

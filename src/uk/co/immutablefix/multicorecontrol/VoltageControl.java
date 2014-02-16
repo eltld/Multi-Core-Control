@@ -16,14 +16,21 @@ import com.stericson.RootTools.execution.Command;
 import com.stericson.RootTools.execution.CommandCapture;
 import com.stericson.RootTools.execution.Shell;
 
-public class VoltageControl {
+public class VoltageControl extends SysfsInterface {
 	final static int MIN_DEFAULT_VOLTAGE = 700;
 	static int MIN_VOLTAGE = 700;
 	static int MAX_VOLTAGE = 1400;	
 
     private String output;
     private int []frequencies = null;
+    
+    final String uvTablePath = "/sys/devices/system/cpu/cpu0/cpufreq/UV_mV_table";
+    final String vddLevelsPath = "/sys/devices/system/cpu/cpufreq/vdd_table/vdd_levels";
 
+	public boolean isSupported() {
+		return ((RootTools.exists(uvTablePath)) || (RootTools.exists(vddLevelsPath))); 
+	}
+	
 	public int[] getVoltages() throws Exception {
 		int [] voltages = null;
 		String [] table = null;
@@ -117,8 +124,8 @@ public class VoltageControl {
 		String tablePath = "";
 		String [] table = null;
 		
-		if (RootTools.exists("/sys/devices/system/cpu/cpu0/cpufreq/UV_mV_table")) {
-			tablePath = "/sys/devices/system/cpu/cpu0/cpufreq/UV_mV_table";
+		if (RootTools.exists(uvTablePath)) {
+			tablePath = uvTablePath;
 		} else {
 			throw new Exception("Failed to find voltage table, unsupported kernel.");
 		}
@@ -134,8 +141,8 @@ public class VoltageControl {
 		String tablePath = "";
 		String [] table = null;
 		
-		if (RootTools.exists("/sys/devices/system/cpu/cpufreq/vdd_table/vdd_levels")) {
-			tablePath = "/sys/devices/system/cpu/cpufreq/vdd_table/vdd_levels";
+		if (RootTools.exists(vddLevelsPath)) {
+			tablePath = vddLevelsPath;
 		} else {
 			throw new Exception("Failed to find voltage table, unsupported kernel.");
 		}
@@ -147,12 +154,10 @@ public class VoltageControl {
 	}
 
 	protected String getTable(String tablePath) throws Exception {
+		Shell shell = RootTools.getShell(true);
 		output = "";
 
-		CommandCapture command = new CommandCapture(0, 
-				"chmod 777 " + tablePath);
-
-		Command command2 = new Command(0, "cat " + tablePath)
+		Command command = new Command(0, "cat " + tablePath)
 		{
 		        @Override
 		        public void output(int id, String line)
@@ -167,10 +172,10 @@ public class VoltageControl {
 				public void commandTerminated(int arg0, String arg1) {}
 		};
 		
-		RootTools.getShell(true).add(command);
+		setFilePermissions(shell, "777", tablePath);
+		shell.add(command);
 		commandWait(command);
-		RootTools.getShell(true).add(command2);
-		commandWait(command2);
+		setFilePermissions(shell, "444", tablePath);
 
 		return output;
 	}
@@ -195,11 +200,11 @@ public class VoltageControl {
 			}
 		}
 		
-		if (RootTools.exists("/sys/devices/system/cpu/cpufreq/vdd_table/vdd_levels")) {
+		if (RootTools.exists(vddLevelsPath)) {
 			vdd = true;
-			tablePath = "/sys/devices/system/cpu/cpufreq/vdd_table/vdd_levels";
-		} else if (RootTools.exists("/sys/devices/system/cpu/cpu0/cpufreq/UV_mV_table")) {
-			tablePath = "/sys/devices/system/cpu/cpu0/cpufreq/UV_mV_table";
+			tablePath = vddLevelsPath;
+		} else if (RootTools.exists(uvTablePath)) {
+			tablePath = uvTablePath;
 		} else {
 			throw new Exception("Failed to find voltage table, unsupported kernel.");
 		}
@@ -255,18 +260,4 @@ public class VoltageControl {
 			
 		setVoltages(volts);
 	}
-	
-	protected void commandWait(Command cmd) throws Exception {
-        while (!cmd.isFinished()) {
-            synchronized (cmd) {
-                try {
-                    if (!cmd.isFinished()) {
-                        cmd.wait(100);
-                    }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
 }

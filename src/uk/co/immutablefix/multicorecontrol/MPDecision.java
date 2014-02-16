@@ -10,31 +10,26 @@ package uk.co.immutablefix.multicorecontrol;
 import com.stericson.RootTools.RootTools;
 
 public class MPDecision extends SysfsInterface {
+	final String minCpuPath = "/sys/kernel/msm_mpdecision/conf/min_cpus";
+	final String maxCpuPath = "/sys/kernel/msm_mpdecision/conf/max_cpus";
+	
+	public boolean isSupported() {
+		return ((RootTools.exists(minCpuPath)) && (RootTools.exists(maxCpuPath))); 
+	}
+
 	public int getMinCPUs() throws Exception {
-		String path = "/sys/kernel/msm_mpdecision/conf/min_cpus";
-				
-		if (!RootTools.exists(path)) {
-			throw new Exception("Error: Unsupported kernel.");
-		}
-		
-		return Integer.parseInt(getSetting(path));
+		return Integer.parseInt(getSetting(minCpuPath));
 	}
 
 	public int getMaxCPUs() throws Exception {
-		String path = "/sys/kernel/msm_mpdecision/conf/max_cpus";
-		
-		return Integer.parseInt(getSetting(path));
+		return Integer.parseInt(getSetting(maxCpuPath));
 	}
 
 	public void setMinCPUs(int cpus) throws Exception {
-		String path = "/sys/kernel/msm_mpdecision/conf/min_cpus";
-		
-		setSetting(path, String.valueOf(cpus));
+		setSetting(minCpuPath, String.valueOf(cpus));
 	}
 	
 	public void setMaxCPUs(int cpus) throws Exception {
-		String path = "/sys/kernel/msm_mpdecision/conf/max_cpus";
-		
-		setSetting(path, String.valueOf(cpus));
+		setSetting(maxCpuPath, String.valueOf(cpus));
 	}
 }

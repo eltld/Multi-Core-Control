@@ -63,11 +63,7 @@ public class SysfsInterface {
 
 		Shell shell = RootTools.getShell(true);
 		
-		CommandCapture command = new CommandCapture(0, "chmod 777 " + path);
-		shell.add(command);
-		commandWait(command);
-
-		if (command.getExitCode() != 0) {
+		if (setFilePermissions(shell, "777", path) != 0) {
 			throw new Exception("Error: Failed to configure setting.");
 		}
 
@@ -84,6 +80,8 @@ public class SysfsInterface {
 		} catch (Exception e) {
 			throw new Exception("Error setting Sysfs value, general exception.");
 		}
+
+		setFilePermissions(shell, "444", path);
 	}
 
 	public void setSettingForce(String path, String value) throws Exception {
@@ -101,12 +99,22 @@ public class SysfsInterface {
 		}
 	}
 	
+	protected int setFilePermissions(Shell shell, String permissions, String file) throws Exception{
+		if (shell == null) shell = RootTools.getShell(true);
+
+		CommandCapture command = new CommandCapture(0, "chmod " + permissions + " " + file);
+		shell.add(command);
+		commandWait(command);
+		
+		return command.getExitCode();
+	}
+	
 	protected void commandWait(Command cmd) throws Exception {
         while (!cmd.isFinished()) {
             synchronized (cmd) {
                 try {
                     if (!cmd.isFinished()) {
-                        cmd.wait(50);
+                        cmd.wait(10);
                     }
                 } catch (InterruptedException e) {
                     e.printStackTrace();

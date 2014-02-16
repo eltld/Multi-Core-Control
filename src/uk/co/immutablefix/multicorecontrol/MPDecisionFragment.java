@@ -27,16 +27,8 @@ public class MPDecisionFragment extends Fragment {
 	SharedPreferences prefs;
 	CheckBox cbxBoot;
 
-	public boolean getSupported(){
-		boolean supported = true;
-		
-        MPDecision mpd = new MPDecision();
-        try {
-			mpd.getMinCPUs();
-		} catch (Exception e) {
-			supported = false;
-		}
-		return supported;
+	public boolean isSupported(){
+        return new MPDecision().isSupported();
 	}
 	
 	@Override
