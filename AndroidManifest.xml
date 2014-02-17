@@ -49,6 +49,10 @@
             android:name="uk.co.immutablefix.multicorecontrol.CpuItemFragment"
             android:label="@string/title_activity_cpu_item_fragment" >
         </activity>
+        <activity
+            android:name="uk.co.immutablefix.multicorecontrol.CompatibilityActivity"
+            android:label="@string/title_activity_compatibility" >
+        </activity>
     </application>
 
 </manifest>

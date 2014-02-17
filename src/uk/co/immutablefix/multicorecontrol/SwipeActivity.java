@@ -189,6 +189,10 @@ public class SwipeActivity extends FragmentActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
     	switch(item.getItemId()) {
+    	case R.id.mitmCompatibility:
+    		Intent compatibility = new Intent(this, CompatibilityActivity.class);
+    		startActivity(compatibility);
+    		return true;
     	case R.id.mitmAbout:
     		Intent about = new Intent(this, AboutActivity.class);
     		startActivity(about);
