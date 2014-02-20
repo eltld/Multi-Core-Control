@@ -6,7 +6,9 @@ import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -88,7 +90,19 @@ public class SwipeActivity extends FragmentActivity {
 	                        this, "colourcontrol", ColourControlFragment.class));
 			ab.addTab(tab4);
 		}
-  }
+
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+		if (prefs.getInt("FirstRunVer", 0) < 1) {
+			Intent compatibility = new Intent(this, CompatibilityActivity.class);
+			startActivity(compatibility);
+			Intent about = new Intent(this, AboutActivity.class);
+			startActivity(about);
+			
+			SharedPreferences.Editor e = prefs.edit();
+			e.putInt("FirstRunVer", 1);
+			e.commit(); // this saves to disk and notifies observers
+		}
+    }
     
     public static class TabListener<T extends Fragment> implements ActionBar.TabListener {
         private Fragment mFragment;

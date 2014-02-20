@@ -2,10 +2,10 @@ package uk.co.immutablefix.multicorecontrol;
 
 import android.os.Bundle;
 import android.app.Activity;
-import android.view.Menu;
-import android.widget.Button;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 public class CompatibilityActivity extends Activity {
 
@@ -13,6 +13,13 @@ public class CompatibilityActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_compatibility);
+
+		((RelativeLayout) findViewById(R.id.relativeLayout)).setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				finish();
+			}
+	    });
 		
 		int idImageGreen = getResources().getIdentifier("@drawable/round_dot_green", "drawable", getPackageName());
 		int idImageRed = getResources().getIdentifier("@drawable/round_dot_red", "drawable", getPackageName());
