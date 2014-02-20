@@ -51,7 +51,7 @@
         </activity>
         <activity
             android:name="uk.co.immutablefix.multicorecontrol.CompatibilityActivity"
-            android:label="@string/title_activity_compatibility" >
+            android:label="@string/app_name" >
         </activity>
     </application>
 
