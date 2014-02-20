@@ -29,6 +29,10 @@ public class CpuControlFragment extends Fragment {
 	
 	SharedPreferences prefs;
 	CheckBox cbxBoot;
+
+	public boolean isSupported(){
+		return new CpuControl().isSupported();
+	}
 	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {

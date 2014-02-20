@@ -4,6 +4,15 @@ import com.stericson.RootTools.RootTools;
 
 public class CpuControl extends SysfsInterface{
 
+	public boolean isSupported() {
+		return ((RootTools.exists("/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq")) &&
+				(RootTools.exists("/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_min_freq")) &&
+				(RootTools.exists("/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq")) &&
+				(RootTools.exists("/sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq")) &&
+				(RootTools.exists("/sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq")) &&
+				(RootTools.exists("/sys/devices/system/cpu/cpu0/cpufreq/scaling_available_frequencies"))); 
+	}
+	
 	public int getCpusPresent() {
 		String path = "/sys/devices/system/cpu/present";
 		int cpuTotal = 1;

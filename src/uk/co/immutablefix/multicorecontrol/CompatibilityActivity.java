@@ -17,7 +17,11 @@ public class CompatibilityActivity extends Activity {
 		int idImageGreen = getResources().getIdentifier("@drawable/round_dot_green", "drawable", getPackageName());
 		int idImageRed = getResources().getIdentifier("@drawable/round_dot_red", "drawable", getPackageName());
 
-		((ImageView) (findViewById(R.id.ivCpuControl))).setImageResource(idImageGreen);
+		if (new CpuControl().isSupported()) {
+			((ImageView) (findViewById(R.id.ivCpuControl))).setImageResource(idImageGreen);
+		} else {
+			((ImageView) (findViewById(R.id.ivCpuControl))).setImageResource(idImageRed);
+		}
 
 		if (new VoltageControl().isSupported()) {
 			((ImageView) (findViewById(R.id.ivVoltageControl))).setImageResource(idImageGreen);
