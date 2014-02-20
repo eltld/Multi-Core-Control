@@ -9,128 +9,136 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".CpuControlFragment" >
 
-    <LinearLayout
+    <ScrollView
+        android:id="@+id/scrollView1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
 
-        <TextView
-            android:id="@+id/textView4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="CPU Frequencies"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical" 
-        android:id="@+id/cpu_fragment">
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/govLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingTop="5dp" >
-
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
 
-            <TextView
-                android:id="@+id/textView3"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:id="@+id/textView4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="CPU Frequencies"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+	        </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/cpu_fragment"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="CPU Governor"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                android:orientation="vertical" >
+            </LinearLayout>
 
+            <LinearLayout
+                android:id="@+id/govLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="5dp" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" >
+
+                    <TextView
+                        android:id="@+id/textView3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="CPU Governor"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="12dp" >
+
+                    <TextView
+                        android:id="@+id/TextView0"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="6"
+                        android:text="Min"
+                        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+                    <SeekBar
+                        android:id="@+id/sbGovMin"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="3" />
+
+                    <TextView
+                        android:id="@+id/tvGovMin"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="5"
+                        android:text="0MHz"
+                        android:textAppearance="?android:attr/textAppearanceSmall" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="12dp" >
+
+                    <TextView
+                        android:id="@+id/textView1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="6"
+                        android:text="Max"
+                        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+                    <SeekBar
+                        android:id="@+id/sbGovMax"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="3" />
+
+                    <TextView
+                        android:id="@+id/tvGovMax"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="5"
+                        android:text="0MHz"
+                        android:textAppearance="?android:attr/textAppearanceSmall" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="10dp" >
+
+                    <Button
+                        android:id="@+id/btnApply"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Apply" />
+
+                    <Button
+                        android:id="@+id/btnSave"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Save" />
+                </LinearLayout>
+
+                <CheckBox
+                    android:id="@+id/cbxBoot"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Apply setting on boot" />
+            </LinearLayout>
         </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="12dp" >
-
-            <TextView
-                android:id="@+id/TextView0"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="6"
-                android:text="Min"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
-
-            <SeekBar
-                android:id="@+id/sbGovMin"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="3" />
-
-            <TextView
-                android:id="@+id/tvGovMin"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="5"
-                android:text="0MHz"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="12dp" >
-
-            <TextView
-                android:id="@+id/textView1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="6"
-                android:text="Max"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
-
-            <SeekBar
-                android:id="@+id/sbGovMax"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="3" />
-
-            <TextView
-                android:id="@+id/tvGovMax"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="5"
-                android:text="0MHz"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="10dp" >
-
-            <Button
-                android:id="@+id/btnApply"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Apply" />
-
-            <Button
-                android:id="@+id/btnSave"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Save" />
-        </LinearLayout>
-
-        <CheckBox
-            android:id="@+id/cbxBoot"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Apply setting on boot" />
-    </LinearLayout>
-
+    </ScrollView>
 </LinearLayout>
