@@ -1,10 +1,17 @@
 package uk.co.immutablefix.multicorecontrol;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.TimeoutException;
+
+import com.stericson.RootTools.RootTools;
+import com.stericson.RootTools.exceptions.RootDeniedException;
 
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -30,6 +37,24 @@ public class SwipeActivity extends FragmentActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+        
+        if (!RootTools.isRootAvailable()) {
+        	showExitMessage(R.string.no_root_title, R.string.no_root_message);
+	        return;
+        } else {
+        	try {
+				RootTools.getShell(true);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (TimeoutException e) {
+				showExitMessage(R.string.no_root_title, R.string.timeout_root_message);
+		        return;
+			} catch (RootDeniedException e) {
+				showExitMessage(R.string.no_root_title, R.string.denied_root_message);
+		        return;
+			}
+        }
 
         Fragment tabOneFragment = new CpuControlFragment();
         Fragment tabTwoFragment = new VoltageControlFragment();
@@ -232,6 +257,17 @@ public class SwipeActivity extends FragmentActivity {
 		}
 	}
     
+	private void showExitMessage(int title, int message) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setPositiveButton(R.string.exit, new DialogInterface.OnClickListener() {
+	           public void onClick(DialogInterface dialog, int id) {
+	               finish();
+	           }
+	       });
+
+		builder.setMessage(message).setTitle(title);
+		builder.create().show();
+	}
 }
 
 

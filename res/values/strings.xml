@@ -18,4 +18,9 @@
     <string name="title_activity_compatibility">Compatibility</string>
     <string name="compatibility_label">Compatibility</string>
     <string name="compatibility_shortcut">Compatibility Short</string>
+    <string name="no_root_title">Root Permissions Required</string>
+    <string name="no_root_message">This app requires a rooted device.</string>
+    <string name="timeout_root_message">This app requires root permissions.</string>
+    <string name="denied_root_message">This app requires root permissions.</string>
+    <string name="exit">Exit</string>
 </resources>
