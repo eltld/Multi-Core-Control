@@ -41,5 +41,14 @@
         android:layout_weight="0.30"
         android:text="Please use the voltage controls with caution."
         android:textAppearance="?android:attr/textAppearanceMedium" />
+    
+    <TextView
+        android:id="@+id/tvSendEmail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Touch here to send bugs and suggestions to: \nimmutablefix@gmail.com "
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="#8080FF" />
 
 </LinearLayout>
