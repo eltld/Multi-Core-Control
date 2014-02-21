@@ -1,4 +1,4 @@
-package uk.co.immutablefix.multicorecontrol;
+package uk.co.immutablefix.systemcontrol;
 
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;

@@ -1,6 +1,6 @@
 // Copyright 2013 Shaun Simpson shauns2029@gmail.com
 
-package uk.co.immutablefix.multicorecontrol;
+package uk.co.immutablefix.systemcontrol;
 
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;

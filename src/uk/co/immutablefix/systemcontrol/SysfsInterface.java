@@ -1,4 +1,4 @@
-package uk.co.immutablefix.multicorecontrol;
+package uk.co.immutablefix.systemcontrol;
 
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;

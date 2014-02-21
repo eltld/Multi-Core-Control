@@ -5,7 +5,7 @@
 *
 */
 
-package uk.co.immutablefix.multicorecontrol;
+package uk.co.immutablefix.systemcontrol;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -13,7 +13,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
-import uk.co.immutablefix.multicorecontrol.CpuControlFragment;
+import uk.co.immutablefix.systemcontrol.CpuControlFragment;
 
 public class ScreenReceiver extends BroadcastReceiver {
 	@Override

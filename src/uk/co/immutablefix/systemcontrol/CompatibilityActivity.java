@@ -1,4 +1,4 @@
-package uk.co.immutablefix.multicorecontrol;
+package uk.co.immutablefix.systemcontrol;
 
 import android.os.Bundle;
 import android.app.Activity;

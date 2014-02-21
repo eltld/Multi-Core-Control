@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="uk.co.immutablefix.multicorecontrol"
+    package="uk.co.immutablefix.systemcontrol"
     android:versionCode="1"
-    android:versionName="0.1" >
+    android:versionName="1.0" >
 
     <uses-sdk
         android:minSdkVersion="15"
@@ -17,7 +17,7 @@
         android:label="@string/app_name"
         android:screenOrientation="portrait" >
         <activity
-            android:name="uk.co.immutablefix.multicorecontrol.SwipeActivity"
+            android:name="uk.co.immutablefix.systemcontrol.SwipeActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,7 +26,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="uk.co.immutablefix.multicorecontrol.AboutActivity"
+            android:name="uk.co.immutablefix.systemcontrol.AboutActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.ABOUT" />
@@ -35,22 +35,22 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name="uk.co.immutablefix.multicorecontrol.ScreenReceiver" >
+        <receiver android:name="uk.co.immutablefix.systemcontrol.ScreenReceiver" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
 
         <activity
-            android:name="uk.co.immutablefix.multicorecontrol.CpuControlFragment"
+            android:name="uk.co.immutablefix.systemcontrol.CpuControlFragment"
             android:label="@string/title_activity_cpu_fragment" >
         </activity>
         <activity
-            android:name="uk.co.immutablefix.multicorecontrol.CpuItemFragment"
+            android:name="uk.co.immutablefix.systemcontrol.CpuItemFragment"
             android:label="@string/title_activity_cpu_item_fragment" >
         </activity>
         <activity
-            android:name="uk.co.immutablefix.multicorecontrol.CompatibilityActivity"
+            android:name="uk.co.immutablefix.systemcontrol.CompatibilityActivity"
             android:label="@string/app_name" >
         </activity>
     </application>

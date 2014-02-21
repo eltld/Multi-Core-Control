@@ -5,10 +5,10 @@
 *
 */
 
-package uk.co.immutablefix.multicorecontrol;
+package uk.co.immutablefix.systemcontrol;
 
 
-import uk.co.immutablefix.multicorecontrol.R;
+import uk.co.immutablefix.systemcontrol.R;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;

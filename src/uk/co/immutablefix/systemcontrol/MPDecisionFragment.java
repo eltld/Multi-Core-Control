@@ -1,4 +1,4 @@
-package uk.co.immutablefix.multicorecontrol;
+package uk.co.immutablefix.systemcontrol;
 
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -15,7 +15,7 @@ import android.widget.Toast;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
-import uk.co.immutablefix.multicorecontrol.R;
+import uk.co.immutablefix.systemcontrol.R;
 
 public class MPDecisionFragment extends Fragment {
 	private SeekBar sbMaxCPUs = null;

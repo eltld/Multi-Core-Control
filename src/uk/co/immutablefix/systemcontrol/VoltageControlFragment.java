@@ -5,7 +5,7 @@
 *
 */
 
-package uk.co.immutablefix.multicorecontrol;
+package uk.co.immutablefix.systemcontrol;
 
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -171,7 +171,15 @@ public class VoltageControlFragment extends Fragment {
 				imgMinus[i].setOnClickListener(new OnClickListener(){
 					@Override
 					public void onClick(View v) {
-						sbVoltages[v.getId()].setProgress(sbVoltages[v.getId()].getProgress() - 5);
+						int current = sbVoltages[v.getId()].getProgress();
+						int applied = appliedVoltages[v.getId()] - VoltageControl.MIN_VOLTAGE;
+						
+						if ((current > applied) && (current - applied < 5)) {
+							current = applied;
+						} else {
+							current -= 5;
+						}
+						sbVoltages[v.getId()].setProgress(current);
 					}
 				});
 
@@ -215,7 +223,16 @@ public class VoltageControlFragment extends Fragment {
 				imgPlus[i].setOnClickListener(new OnClickListener(){
 					@Override
 					public void onClick(View v) {
-						sbVoltages[v.getId()].setProgress(sbVoltages[v.getId()].getProgress() + 5);
+						int current = sbVoltages[v.getId()].getProgress();
+						int applied = appliedVoltages[v.getId()] - VoltageControl.MIN_VOLTAGE;
+						
+						if ((applied > current) && (applied - current < 5)) {
+							current = applied;
+						} else {
+							current += 5;
+						}
+						
+						sbVoltages[v.getId()].setProgress(current);
 					}
 				});
     		
@@ -411,7 +428,7 @@ public class VoltageControlFragment extends Fragment {
 	
 	    	cbxBoot = new CheckBox(getActivity().getApplicationContext());
 		    cbxBoot.setChecked(prefs.getBoolean("VoltagesApplyOnBoot", false));
-		    cbxBoot.setText("Apply custom voltages on boot");
+		    cbxBoot.setText("Apply saved settings on boot");
 		    // Test if there are settings to apply on boot. If not disable the check box.
 			cbxBoot.setEnabled(prefs.getString("CustomVoltages", null) != null);
 		    cbxBoot.setOnClickListener(new OnClickListener() {

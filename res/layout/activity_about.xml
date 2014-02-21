@@ -15,7 +15,7 @@
         android:layout_width="wrap_content"
         android:layout_height="50dp"
         android:lines="3"
-        android:text="Multi Core Control was developed by Immutablefix."
+        android:text="System Control was developed by Shaun of Immutablefix."
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
@@ -23,7 +23,7 @@
         android:layout_width="wrap_content"
         android:layout_height="50dp"
         android:lines="3"
-        android:text="This application requires a supported kernel."
+        android:text="This application requires a rooted device and a supported kernel."
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
@@ -39,7 +39,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="0.30"
-        android:text="Please use this application with caution. It can damage your device. No Guarantees! If it kills your device, I am NOT responsible!"
+        android:text="Please use the voltage controls with caution."
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </LinearLayout>
