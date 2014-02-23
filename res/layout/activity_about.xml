@@ -15,15 +15,7 @@
         android:layout_width="wrap_content"
         android:layout_height="50dp"
         android:lines="3"
-        android:text="System Control was developed by Shaun of Immutablefix."
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:lines="3"
-        android:text="This application requires a rooted device and a supported kernel."
+        android:text="Control Your System was developed by Immutablefix."
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
@@ -38,16 +30,17 @@
         android:id="@+id/textView5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="0.30"
-        android:text="Please use the voltage controls with caution."
-        android:textAppearance="?android:attr/textAppearanceMedium" />
-    
+        android:layout_weight="0.41"
+        android:text="Note: Most kernels will only support some features. Please use with caution, over-clocking and over-volting may damage your device. Use at own risk."
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="#FF0000" />
+
     <TextView
         android:id="@+id/tvSendEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="Touch here to send bugs and suggestions to: \nimmutablefix@gmail.com "
+        android:text="Touch here to send bug reports and suggestions. This will help to improve this app."
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="#8080FF" />
 

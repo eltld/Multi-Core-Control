@@ -130,7 +130,7 @@
         android:layout_alignLeft="@+id/linearLayout1"
         android:layout_below="@+id/linearLayout1"
         android:paddingTop="20dp"
-        android:text="This list indicates the features supported by System Control using the installed kernel."
+        android:text="This list indicates the features supported by Control Your System using the installed kernel. Most kernels do not support all the avaliable features."
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
 </RelativeLayout>

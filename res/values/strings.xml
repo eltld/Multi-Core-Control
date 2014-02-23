@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">System Control</string>
+    <string name="app_name">Control Your System</string>
     <string name="action_settings">Settings</string>
     <string name="quit_label">Quit</string>
     <string name="quit_shortcut">Quit Short</string>
@@ -9,7 +9,7 @@
     <string name="voltagecontrol_lable">Voltage Control</string>
     <string name="voltagecontrol_shortcut">Voltage Short</string>
     <string name="title_activity_voltagecontrol">Voltage Control</string>
-    <string name="mpdecision_label">System Control</string>
+    <string name="mpdecision_label">Control Your System</string>
     <string name="mpdecision_shortcut">MPDecision Short</string>
     <string name="title_activity_mpdecision">System Control</string>
     <string name="hello_world">Hello world!</string>

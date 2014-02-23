@@ -14,6 +14,7 @@ import uk.co.immutablefix.systemcontrol.R;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,8 +38,33 @@ public class AboutActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				SysfsInterface sys = new SysfsInterface();
+				String compatibility = "Comtatibility Report: ";
 				try {
-					SendMail("Kernel: " + sys.getSetting("/proc/sys/kernel/osrelease") + "\n\n");
+					if (new CpuControl().isSupported()) {
+						compatibility += "CPU yes, ";
+					} else {
+						compatibility += "CPU no, ";
+					}
+
+					if (new VoltageControl().isSupported()) {
+						compatibility += "voltage yes, ";
+					} else {
+						compatibility += "voltage no, ";
+					}
+					
+					if (new MPDecision().isSupported()) {
+						compatibility += "MPDecision yes, ";
+					} else {
+						compatibility += "MPDecision no, ";
+					}
+
+					if (new ColourControl().isSupported()) {
+						compatibility += "colour yes.";
+					} else {
+						compatibility += "colour no.";
+					}
+					
+					SendMail("Kernel: " + sys.getSetting("/proc/sys/kernel/osrelease") + "\n\n" + compatibility + "\n\n");
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					SendMail("");
@@ -53,7 +79,7 @@ public class AboutActivity extends Activity {
 	{
 	   String[] recepient =  new String[1];
 	   recepient[0] = "immutablefix@gmail.com";
-	   String subject="System Control";
+	   String subject="Control Your System";
 	   Intent i = new Intent(Intent.ACTION_SEND);
 	   i.setType("message/rfc822");
 	   i.putExtra(Intent.EXTRA_EMAIL, recepient);
