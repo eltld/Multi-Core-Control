@@ -8,13 +8,10 @@
 package uk.co.immutablefix.systemcontrol;
 
 
-import com.stericson.RootTools.RootTools;
-
 import uk.co.immutablefix.systemcontrol.R;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,7 +35,7 @@ public class AboutActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				SysfsInterface sys = new SysfsInterface();
-				String compatibility = "Comtatibility Report: ";
+				String compatibility = "Compatibility Report: ";
 				try {
 					if (new CpuControl().isSupported()) {
 						compatibility += "CPU yes, ";

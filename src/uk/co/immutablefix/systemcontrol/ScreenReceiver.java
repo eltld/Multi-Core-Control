@@ -13,7 +13,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
-import uk.co.immutablefix.systemcontrol.CpuControlFragment;
 
 public class ScreenReceiver extends BroadcastReceiver {
 	@Override

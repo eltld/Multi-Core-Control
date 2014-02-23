@@ -5,8 +5,6 @@ package uk.co.immutablefix.systemcontrol;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
-import android.widget.Toast;
-
 import com.stericson.RootTools.RootTools;
 import com.stericson.RootTools.exceptions.RootDeniedException;
 import com.stericson.RootTools.execution.Command;
