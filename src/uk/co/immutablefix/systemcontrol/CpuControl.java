@@ -5,12 +5,22 @@ import com.stericson.RootTools.RootTools;
 public class CpuControl extends SysfsInterface{
 
 	public boolean isSupported() {
-		return ((RootTools.exists("/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq")) &&
+		boolean pathsExist = ((RootTools.exists("/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq")) &&
 				(RootTools.exists("/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_min_freq")) &&
 				(RootTools.exists("/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq")) &&
 				(RootTools.exists("/sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq")) &&
 				(RootTools.exists("/sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq")) &&
-				(RootTools.exists("/sys/devices/system/cpu/cpu0/cpufreq/scaling_available_frequencies"))); 
+				(RootTools.exists("/sys/devices/system/cpu/cpu0/cpufreq/scaling_available_frequencies")));
+		
+		if (pathsExist) {
+			try {
+				getAvaliableFrequencies(0);
+				return true; 
+			} catch (Exception e) {
+			}
+		} 
+		
+		return false;
 	}
 	
 	public int getCpusPresent() {

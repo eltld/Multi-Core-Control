@@ -73,6 +73,7 @@ public class CpuControlFragment extends Fragment {
 			} catch (Exception e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
+				return null;
 			}
 			
 			tvGovMin = (TextView) view.findViewById(R.id.tvGovMin);

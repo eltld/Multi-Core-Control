@@ -18,6 +18,7 @@ public class CpuItemFragment extends Fragment {
 	Thread thread = null;
 	static int minFrequency = 0;
 	static int maxFrequency = 0;
+	Runnable runnable = null;
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
@@ -51,7 +52,7 @@ public class CpuItemFragment extends Fragment {
 		
 		
 	    final Handler handler = new Handler();
-	    Runnable runnable = new Runnable() {
+	    runnable = new Runnable() {
 			@Override
 			public void run() {
 				int time = 1000;
@@ -95,15 +96,25 @@ public class CpuItemFragment extends Fragment {
 				return;
 			}
 		};
-		
-		running = true;
-		thread = new Thread(runnable);
-		thread.start();
 
 		return view;
 	}
 
-
+	@Override
+	public void onPause(){
+	    super.onPause();		
+		running = false;
+		thread.interrupt();
+	}
+	
+	@Override
+	public void onResume(){
+		super.onResume();
+		running = true;
+		thread = new Thread(runnable);
+		thread.start();
+	}
+	
 	@Override
 	public void onDestroyView(){
 	    super.onDestroyView();		
