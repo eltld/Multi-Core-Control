@@ -62,7 +62,11 @@ public class ColourControl extends SysfsInterface {
 		int[] colours = new int[strColours.length];
 		
 		for (int i=0; i<colours.length; i++){
-			colours[i] = Integer.parseInt(strColours[i]);
+			try {
+				colours[i] = Integer.parseInt(strColours[i]);
+			} catch (Exception e2) {
+				colours[i] = 2000000000;
+			}
 		}
 		
 		return colours;
